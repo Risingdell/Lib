@@ -1,0 +1,221 @@
+/* Register.css - Modern mobile-friendly registration form styles */
+
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.register-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.register-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+.register-subtitle {
+  font-size: 14px;
+  color: #718096;
+  text-align: center;
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.name-row {
+  display: flex;
+  gap: 12px;
+}
+
+.name-row .input-group {
+  flex: 1;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 16px 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  background: white;
+  color: #2d3748;
+  box-sizing: border-box;
+}
+
+.input-group input::placeholder {
+  color: #a0aec0;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.input-group input:invalid {
+  border-color: #f56565;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.terms-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #4299e1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.terms-checkbox label {
+  font-size: 14px;
+  color: #4a5568;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.terms-link {
+  color: #4299e1;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.terms-link:hover {
+  text-decoration: underline;
+}
+
+.register-button {
+  background: #48bb78;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.register-button:hover {
+  background: #38a169;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+.register-button:active {
+  transform: translateY(0);
+}
+
+.login-prompt {
+  text-align: center;
+  font-size: 14px;
+  color: #718096;
+  margin-top: 16px;
+}
+
+.login-link {
+  color: #4299e1;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+.success-message {
+  text-align: center;
+  padding: 24px;
+}
+
+.success-message p {
+  color: #48bb78;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .register-container {
+    padding: 16px;
+  }
+
+  .register-card {
+    padding: 24px;
+    border-radius: 8px;
+  }
+
+  .register-title {
+    font-size: 24px;
+  }
+
+  .name-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .input-group input {
+    padding: 14px 12px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Focus styles for accessibility */
+.input-group input:focus-visible {
+  outline: 2px solid #4299e1;
+  outline-offset: 2px;
+}
+
+.register-button:focus-visible {
+  outline: 2px solid #4299e1;
+  outline-offset: 2px;
+}
+
+/* Loading state */
+.register-button:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Error state */
+.input-group.error input {
+  border-color: #f56565;
+}
+
+.error-message {
+  color: #f56565;
+  font-size: 12px;
+  margin-top: 4px;
+}
