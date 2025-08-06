@@ -35,21 +35,10 @@ const MainPage = () => {
       axios.get('http://localhost:5000/borrow-history', { withCredentials: true })
         .then(res => setHistoryBooks(res.data))
         .catch(err => console.error('Failed to fetch history', err));
-    } else if (activeTab === 'view-sell') {
-      axios.get('http://localhost:5000/sell-books')
-        .then((res) => setSellingBooks(res.data))
-        .catch((err) => console.error("Failed to fetch selling books", err));
     }
   }, [activeTab]);
 
 
-  useEffect(() => {
-  if (activeTab === 'view-sell') {
-    axios.get('http://localhost:5000/api/sell-books', { withCredentials: true })
-      .then(res => setSellingBooks(res.data))
-      .catch(err => console.error('Failed to fetch selling books', err));
-  }
-}, [activeTab]);
 
 useEffect(() => {
   if (activeTab === 'view-sell') {
@@ -100,23 +89,35 @@ const handleCancel = (bookId) => {
       alert('❌ Failed to cancel listing.');
     });
 };*/
-const handleBuy = (id) => {
-  axios.post('http://localhost:5000/api/sell-books/buy', { id }, { withCredentials: true })
-    .then(() => {
-      setSellingBooks(prev => prev.map(book =>
-        book.id === id ? { ...book, status: 'sold' } : book
-      ));
-    })
-    .catch(() => alert('❌ Failed to mark as sold'));
+ const handleRequest = (id) => {
+  axios.post('http://localhost:5000/api/sell-books/request', { id }, { withCredentials: true })
+    .then(() => reloadSellingBooks())
+    .catch(() => alert('❌ Request failed'));
 };
 
-const handleCancel = (id) => {
+const handleConfirmReceive = (id) => {
+  axios.post('http://localhost:5000/api/sell-books/confirm-receive', { id }, { withCredentials: true })
+    .then(() => reloadSellingBooks())
+    .catch(() => alert('❌ Confirm failed'));
+};
+
+const handleCancelRequest = (id) => {
+  axios.post('http://localhost:5000/api/sell-books/cancel-request', { id }, { withCredentials: true })
+    .then(() => reloadSellingBooks())
+    .catch(() => alert('❌ Cancel failed'));
+};
+
+const handleCancelSell = (id) => {
   axios.delete(`http://localhost:5000/api/sell-books/${id}`, { withCredentials: true })
-    .then(() => {
-      setSellingBooks(prev => prev.filter(book => book.id !== id));
-    })
+    .then(() => reloadSellingBooks())
     .catch(() => alert('❌ Failed to cancel listing'));
 };
+
+const reloadSellingBooks = () => {
+  axios.get('http://localhost:5000/api/sell-books', { withCredentials: true })
+    .then(res => setSellingBooks(res.data));
+};
+
 
 
 
@@ -284,28 +285,57 @@ const handleCancel = (id) => {
 
       case 'view-sell':
         return (
-           <div className="sell-view-section">
-    <h2 className="section-title">Books & Materials Available for Sale</h2>
-    {sellingBooks.length === 0 ? (
-      <p>No materials currently listed for sale.</p>
-    ) : (
-      <div className="books-grid">
-        {sellingBooks.map((item) => (
-          <div key={item.id} className="book-card">
-            <h3>{item.title}</h3>
-            <p><strong>Type:</strong> {item.type}</p>
-            <p><strong>Description:</strong> {item.description}</p>
-            <p><strong>Contact:</strong> {item.contact}</p>
-            <p><strong>Status:</strong> {item.status}</p>
-            <div className="action-buttons">
-              <button onClick={() => handleBuy(item.id)} className="borrow-btn">✅ Mark as Sold</button>
-              <button onClick={() => handleCancel(item.id)} className="borrow-btn cancel">❌ Cancel</button>
-            </div>
+          <div className="sell-view-section">
+  <h2 className="section-title">Books & Materials Available for Sale</h2>
+  {sellingBooks.length === 0 ? (
+    <p>No materials currently listed for sale.</p>
+  ) : (
+    <div className="books-grid">
+      {sellingBooks.map((item) => (
+        <div key={item.id} className="book-card">
+          <h3>{item.title}</h3>
+          <p><strong>Type:</strong> {item.type}</p>
+          <p><strong>Description:</strong> {item.description}</p>
+          <p><strong>Contact:</strong> {item.contact}</p>
+          <p><strong>Status:</strong> {item.status}</p>
+
+          <div className="action-buttons">
+            {
+              user?.id === item.user_id && item.status === 'available' && (
+                <button onClick={() => handleCancelSell(item.id)} className="borrow-btn cancel">❌ Cancel</button>
+              )
+            }
+            {
+              item.status === 'available' && user?.id !== item.user_id && (
+                <button onClick={() => handleRequest(item.id)} className="borrow-btn">📥 Request</button>
+              )
+            }
+            {
+              item.status === 'requested' && user?.id === item.requested_by && (
+                <>
+                  <button onClick={() => handleConfirmReceive(item.id)} className="borrow-btn">✅ Received</button>
+                  <button onClick={() => handleCancelRequest(item.id)} className="borrow-btn cancel">❌ Cancel</button>
+                </>
+              )
+            }
+            {
+              item.status === 'received' && (
+                <span className="status-msg">✅ Received by Buyer</span>
+              )
+            }
+            {
+              item.status === 'sold' && (
+                <span className="status-msg">✅ Sold</span>
+              )
+            }
           </div>
-        ))}
-      </div>
-    )}
-  </div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
+
         );
 
       default:

@@ -76,6 +76,7 @@ function Register() {
           </div>
         ) : (
           <form className="register-form" onSubmit={(e) => { e.preventDefault(); register(); }}>
+            <Link to="/login" className="login-link">Go to Login</Link>
             <div className="name-row">
               <div className="input-group">
                 <input
@@ -97,40 +98,40 @@ function Register() {
                   required
                 />
               </div>
-                         </div>
+            </div>
 
-             <div className="input-group">
-               <input
-                 type="text"
-                 name="usn"
-                 value={formData.usn}
-                 onChange={handleInputChange}
-                 placeholder="USN"
-                 required
-               />
-             </div>
-             <div className="input-group">
-             <input
-               type="text"
-               name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-              placeholder="Username"
-              required
+            <div className="input-group">
+              <input
+                type="text"
+                name="usn"
+                value={formData.usn}
+                onChange={handleInputChange}
+                placeholder="USN"
+                required
               />
-             </div>
+            </div>
 
+            <div className="input-group">
+              <input
+                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleInputChange}
+                placeholder="Username"
+                required
+              />
+            </div>
 
-             <div className="input-group">
-               <input
-                 type="email"
-                 name="email"
-                 value={formData.email}
-                 onChange={handleInputChange}
-                 placeholder="Email"
-                 required
-               />
-             </div>
+            <div className="input-group">
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="Email"
+                required
+              />
+            </div>
 
             <div className="input-group">
               <input
@@ -154,26 +155,13 @@ function Register() {
               />
             </div>
 
-            <div className="terms-checkbox">
-              <input
-                type="checkbox"
-                id="acceptTerms"
-                checked={acceptTerms}
-                onChange={(e) => setAcceptTerms(e.target.checked)}
-              />
-              <label htmlFor="acceptTerms">
-                I accept the <a href="#" className="terms-link">Terms of Use</a> & <a href="#" className="terms-link">Privacy Policy</a>.
-              </label>
-            </div>
-            <Link to="/login" className="login-link">Go to Login</Link>
+
 
             <button type="submit" className="register-button">
               Register Now
             </button>
 
-            <div className="login-prompt">
-              Already have an account? <Link to="/login" className="login-link">Sign in</Link>
-            </div>
+
           </form>
         )}
       </div>
