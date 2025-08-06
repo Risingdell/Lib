@@ -37,6 +37,17 @@ const MainPage = () => {
         .catch(err => console.error('Failed to fetch history', err));
     }
   }, [activeTab]);
+useEffect(() => {
+  axios
+    .get('http://localhost:5000/sell-books', { withCredentials: true })
+    .then((res) => {
+      setSellingBooks(res.data);
+    })
+    .catch((err) => {
+      console.error('Failed to fetch selling books', err);
+    });
+}, []);
+
 
 
 
@@ -47,6 +58,7 @@ useEffect(() => {
       .catch(err => console.error('Failed to fetch selling books', err));
   }
 }, [activeTab]);
+
 
 
 
@@ -66,19 +78,9 @@ useEffect(() => {
         alert('Failed to borrow book');
       });
   };
-  /*const handleBuy = (bookId) => {
-  axios.post('http://localhost:5000/sell-books/buy', { id: bookId }, { withCredentials: true })
-    .then(() => {
-      setSellingBooks(prev => prev.filter(item => item.id !== bookId));
-      alert('✅ Book marked as sold.');
-    })
-    .catch(err => {
-      console.error('Buy failed', err);
-      alert('❌ Failed to mark book as sold.');
-    });
-};
 
-const handleCancel = (bookId) => {
+
+/*const handleCancel = (bookId) => {
   axios.delete(`http://localhost:5000/sell-books/${bookId}`, { withCredentials: true })
     .then(() => {
       setSellingBooks(prev => prev.filter(item => item.id !== bookId));
@@ -101,22 +103,32 @@ const handleConfirmReceive = (id) => {
     .catch(() => alert('❌ Confirm failed'));
 };
 
-const handleCancelRequest = (id) => {
-  axios.post('http://localhost:5000/api/sell-books/cancel-request', { id }, { withCredentials: true })
-    .then(() => reloadSellingBooks())
-    .catch(() => alert('❌ Cancel failed'));
-};
 
-const handleCancelSell = (id) => {
-  axios.delete(`http://localhost:5000/api/sell-books/${id}`, { withCredentials: true })
-    .then(() => reloadSellingBooks())
-    .catch(() => alert('❌ Failed to cancel listing'));
-};
 
 const reloadSellingBooks = () => {
   axios.get('http://localhost:5000/api/sell-books', { withCredentials: true })
     .then(res => setSellingBooks(res.data));
 };
+const handleCancelSell = (id) => {
+  axios.delete(`http://localhost:5000/api/sell-books/${id}`, { withCredentials: true })
+    .then(() => reloadSellingBooks())
+    .catch(() => alert('❌ Failed to cancel listing.'));
+};
+
+const handleBuy = (bookId) => {
+  axios.post('http://localhost:5000/sell-books/buy', { id: bookId }, { withCredentials: true })
+    .then(() => {
+      // ❌ DO NOT remove book from UI list anymore
+      reloadSellingBooks(); // ✅ Refresh the list to reflect changes
+      alert('✅ You have bought the book!');
+    })
+    .catch(err => {
+      console.error('Buy failed', err);
+      alert('❌ Failed to buy the book.');
+    });
+};
+
+
 
 
 
@@ -285,58 +297,62 @@ const reloadSellingBooks = () => {
 
       case 'view-sell':
         return (
-          <div className="sell-view-section">
-  <h2 className="section-title">Books & Materials Available for Sale</h2>
-  {sellingBooks.length === 0 ? (
-    <p>No materials currently listed for sale.</p>
-  ) : (
-    <div className="books-grid">
-      {sellingBooks.map((item) => (
-        <div key={item.id} className="book-card">
-          <h3>{item.title}</h3>
-          <p><strong>Type:</strong> {item.type}</p>
-          <p><strong>Description:</strong> {item.description}</p>
-          <p><strong>Contact:</strong> {item.contact}</p>
-          <p><strong>Status:</strong> {item.status}</p>
+           <div className="view-sell-section">
+      <h2 className="section-title">Marketplace Books</h2>
+      {sellingBooks.length === 0 ? (
+        <p>No books listed yet.</p>
+      ) : (
+        <div className="books-grid">
+          {sellingBooks.map((item) => (
+            <div key={item.id} className="book-card">
+              <div className="book-info">
+                <h3 className="book-title">{item.title}</h3>
+                <p className="book-author">by {item.author}</p>
+                <p className="book-remarks">{item.description}</p>
+                <div className="book-details">
+                  <span className="book-acc">Acc. No: {item.acc_no}</span>
+                  <span className="book-status">Status: {item.status}</span>
+                </div>
+                <a
+  className="book-contact"
+  href={`https://wa.me/${item.contact.replace(/\D/g, '')}`}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  📞 {item.contact}
+</a>
+              </div>
 
-          <div className="action-buttons">
-            {
-              user?.id === item.user_id && item.status === 'available' && (
-                <button onClick={() => handleCancelSell(item.id)} className="borrow-btn cancel">❌ Cancel</button>
-              )
-            }
-            {
-              item.status === 'available' && user?.id !== item.user_id && (
-                <button onClick={() => handleRequest(item.id)} className="borrow-btn">📥 Request</button>
-              )
-            }
-            {
-              item.status === 'requested' && user?.id === item.requested_by && (
-                <>
-                  <button onClick={() => handleConfirmReceive(item.id)} className="borrow-btn">✅ Received</button>
-                  <button onClick={() => handleCancelRequest(item.id)} className="borrow-btn cancel">❌ Cancel</button>
-                </>
-              )
-            }
-            {
-              item.status === 'received' && (
-                <span className="status-msg">✅ Received by Buyer</span>
-              )
-            }
-            {
-              item.status === 'sold' && (
-                <span className="status-msg">✅ Sold</span>
-              )
-            }
-          </div>
+              <div className="action-buttons">
+                {/* Show Buy button only if the book is available and user is not the seller */}
+
+                 {/* <button onClick={() => handleBuy(item.id)}
+                  >
+                    💰 Buy
+                  </button>*/}
+
+
+                {/* Show buyer name and transaction complete message */}
+                {item.status === 'received' && (
+                  <>
+                    <span className="status-msg">✅ Transaction Completed</span>
+                    {item.buyer_name && (
+                      <p className="book-buyer">🧑‍💼 Bought by: {item.buyer_name}</p>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
-  )}
-</div>
 
 
-        );
+  );
+
+
+
 
       default:
         return null;
@@ -349,30 +365,87 @@ const reloadSellingBooks = () => {
     <div className="main-page">
       <div className={`user-sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
         <button className="sidebar-toggle" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
-          {sidebarCollapsed ? '→' : '←'}
+          {sidebarCollapsed ? '☰' : '✕'}
         </button>
+        
         <div className="user-profile">
           <div className="user-avatar">
-            <span>{user.username?.charAt(0).toUpperCase()}</span>
+            <span>{user.firstName?.charAt(0).toUpperCase()}{user.lastName?.charAt(0).toUpperCase()}</span>
           </div>
           <h3 className="user-name">{user.firstName} {user.lastName}</h3>
-          <p className="user-username">Username: {user.username}</p>
-          <p className="user-email">Email: {user.email}</p>
-          <p className="user-usn">USN: {user.usn}</p>
-          <p className="user-id">ID: {user.id}</p>
+          <p className="user-username">@{user.username}</p>
+        </div>
+
+        <nav className="sidebar-nav">
+          <button 
+            className={`nav-item ${activeTab === 'books' ? 'active' : ''}`} 
+            onClick={() => setActiveTab('books')}
+          >
+            <span className="nav-icon">🏠</span>
+            <span className="nav-text">Home</span>
+          </button>
+          
+          <button 
+            className={`nav-item ${activeTab === 'borrowed' ? 'active' : ''}`} 
+            onClick={() => setActiveTab('borrowed')}
+          >
+            <span className="nav-icon">📖</span>
+            <span className="nav-text">My Books</span>
+          </button>
+          
+          <button 
+            className={`nav-item ${activeTab === 'history' ? 'active' : ''}`} 
+            onClick={() => setActiveTab('history')}
+          >
+            <span className="nav-icon">📋</span>
+            <span className="nav-text">History</span>
+          </button>
+          
+          <button 
+            className={`nav-item ${activeTab === 'sell' ? 'active' : ''}`} 
+            onClick={() => setActiveTab('sell')}
+          >
+            <span className="nav-icon">💼</span>
+            <span className="nav-text">Sell Book</span>
+          </button>
+          
+          <button 
+            className={`nav-item ${activeTab === 'view-sell' ? 'active' : ''}`} 
+            onClick={() => setActiveTab('view-sell')}
+          >
+            <span className="nav-icon">🛒</span>
+            <span className="nav-text">Marketplace</span>
+          </button>
+        </nav>
+
+        <div className="sidebar-footer">
+          <button 
+            className="nav-item logout-btn" 
+            onClick={() => {
+              axios.post('http://localhost:5000/api/user/logout', {}, { withCredentials: true })
+                .then(() => navigate('/login'))
+                .catch(() => navigate('/login'));
+            }}
+          >
+            <span className="nav-icon">🚪</span>
+            <span className="nav-text">Log Out</span>
+          </button>
         </div>
       </div>
 
       <div className="main-content">
-        <nav className="top-navbar">
-          <div className="nav-tabs">
-            <button className={`nav-tab ${activeTab === 'books' ? 'active' : ''}`} onClick={() => setActiveTab('books')}>📚 Available Books</button>
-            <button className={`nav-tab ${activeTab === 'borrowed' ? 'active' : ''}`} onClick={() => setActiveTab('borrowed')}>📖 Currently Borrowed</button>
-            <button className={`nav-tab ${activeTab === 'history' ? 'active' : ''}`} onClick={() => setActiveTab('history')}>📋 Borrow History</button>
-            <button className={`nav-tab ${activeTab === 'sell' ? 'active' : ''}`} onClick={() => setActiveTab('sell')}>➕ Sell Book</button>
-            <button className={`nav-tab ${activeTab === 'view-sell' ? 'active' : ''}`} onClick={() => setActiveTab('view-sell')}>🛒 View Selling Books</button>
-          </div>
-        </nav>
+        <header className="mobile-header">
+          <button className="mobile-menu-btn" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
+            ☰
+          </button>
+          <h1 className="page-title">
+            {activeTab === 'books' && 'Available Books'}
+            {activeTab === 'borrowed' && 'My Books'}
+            {activeTab === 'history' && 'History'}
+            {activeTab === 'sell' && 'Sell Book'}
+            {activeTab === 'view-sell' && 'Marketplace'}
+          </h1>
+        </header>
 
         <div className="content-area">
           {renderContent()}
