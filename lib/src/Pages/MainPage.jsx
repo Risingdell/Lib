@@ -363,11 +363,12 @@ const handleBuy = (bookId) => {
 
   return (
     <div className="main-page">
+      <div className={`sidebar-overlay ${!sidebarCollapsed ? 'active' : ''}`} onClick={() => setSidebarCollapsed(true)}></div>
       <div className={`user-sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
         <button className="sidebar-toggle" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
           {sidebarCollapsed ? '☰' : '✕'}
         </button>
-        
+
         <div className="user-profile">
           <div className="user-avatar">
             <span>{user.firstName?.charAt(0).toUpperCase()}{user.lastName?.charAt(0).toUpperCase()}</span>
@@ -377,40 +378,40 @@ const handleBuy = (bookId) => {
         </div>
 
         <nav className="sidebar-nav">
-          <button 
-            className={`nav-item ${activeTab === 'books' ? 'active' : ''}`} 
+          <button
+            className={`nav-item ${activeTab === 'books' ? 'active' : ''}`}
             onClick={() => setActiveTab('books')}
           >
             <span className="nav-icon">🏠</span>
             <span className="nav-text">Home</span>
           </button>
-          
-          <button 
-            className={`nav-item ${activeTab === 'borrowed' ? 'active' : ''}`} 
+
+          <button
+            className={`nav-item ${activeTab === 'borrowed' ? 'active' : ''}`}
             onClick={() => setActiveTab('borrowed')}
           >
             <span className="nav-icon">📖</span>
             <span className="nav-text">My Books</span>
           </button>
-          
-          <button 
-            className={`nav-item ${activeTab === 'history' ? 'active' : ''}`} 
+
+          <button
+            className={`nav-item ${activeTab === 'history' ? 'active' : ''}`}
             onClick={() => setActiveTab('history')}
           >
             <span className="nav-icon">📋</span>
             <span className="nav-text">History</span>
           </button>
-          
-          <button 
-            className={`nav-item ${activeTab === 'sell' ? 'active' : ''}`} 
+
+          <button
+            className={`nav-item ${activeTab === 'sell' ? 'active' : ''}`}
             onClick={() => setActiveTab('sell')}
           >
             <span className="nav-icon">💼</span>
             <span className="nav-text">Sell Book</span>
           </button>
-          
-          <button 
-            className={`nav-item ${activeTab === 'view-sell' ? 'active' : ''}`} 
+
+          <button
+            className={`nav-item ${activeTab === 'view-sell' ? 'active' : ''}`}
             onClick={() => setActiveTab('view-sell')}
           >
             <span className="nav-icon">🛒</span>
@@ -419,8 +420,8 @@ const handleBuy = (bookId) => {
         </nav>
 
         <div className="sidebar-footer">
-          <button 
-            className="nav-item logout-btn" 
+          <button
+            className="nav-item logout-btn"
             onClick={() => {
               axios.post('http://localhost:5000/api/user/logout', {}, { withCredentials: true })
                 .then(() => navigate('/login'))
