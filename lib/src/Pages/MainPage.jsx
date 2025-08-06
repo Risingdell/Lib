@@ -313,6 +313,7 @@ const handleBuy = (bookId) => {
                   <span className="book-acc">Acc. No: {item.acc_no}</span>
                   <span className="book-status">Status: {item.status}</span>
                 </div>
+                <pre>Contact me throught whatsapp</pre>
                 <a
   className="book-contact"
   href={`https://wa.me/${item.contact.replace(/\D/g, '')}`}
@@ -364,6 +365,14 @@ const handleBuy = (bookId) => {
   return (
     <div className="main-page">
       <div className={`sidebar-overlay ${!sidebarCollapsed ? 'active' : ''}`} onClick={() => setSidebarCollapsed(true)}></div>
+
+      {/* Maximize button when sidebar is collapsed */}
+      {sidebarCollapsed && (
+        <button className="maximize-btn" onClick={() => setSidebarCollapsed(false)}>
+          <span className="nav-icon">☰</span>
+        </button>
+      )}
+
       <div className={`user-sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
         <button className="sidebar-toggle" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
           {sidebarCollapsed ? '☰' : '✕'}
