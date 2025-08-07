@@ -86,6 +86,8 @@ function Register() {
                   onChange={handleInputChange}
                   placeholder="First Name"
                   required
+                  autoComplete="off"
+                  autoFill="off"
                 />
               </div>
               <div className="input-group">
@@ -96,6 +98,8 @@ function Register() {
                   onChange={handleInputChange}
                   placeholder="Last Name"
                   required
+                  autoComplete="off"
+                  autoFill="off"
                 />
               </div>
             </div>
@@ -108,6 +112,8 @@ function Register() {
                 onChange={handleInputChange}
                 placeholder="USN"
                 required
+                autoComplete="off"
+                autoFill="off"
               />
             </div>
 
@@ -119,6 +125,8 @@ function Register() {
                 onChange={handleInputChange}
                 placeholder="Username"
                 required
+                autoComplete="off"
+                autoFill="off"
               />
             </div>
 
@@ -130,6 +138,8 @@ function Register() {
                 onChange={handleInputChange}
                 placeholder="Email"
                 required
+                autoComplete="off"
+                autoFill="off"
               />
             </div>
 
@@ -141,6 +151,8 @@ function Register() {
                 onChange={handleInputChange}
                 placeholder="Password"
                 required
+                autoComplete="new-password"
+                autoFill="off"
               />
             </div>
 
@@ -152,6 +164,8 @@ function Register() {
                 onChange={handleInputChange}
                 placeholder="Confirm Password"
                 required
+                autoComplete="new-password"
+                autoFill="off"
               />
             </div>
 
