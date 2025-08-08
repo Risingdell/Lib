@@ -1,70 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './HomePage.css';
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    // Three.js animation setup
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    // Create a simple animated background
-    const ctx = canvas.getContext('2d');
-    let animationId;
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    // Particle system for background animation
-    const particles = [];
-    const particleCount = 100;
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 2 + 1,
-        opacity: Math.random() * 0.5 + 0.1
-      });
-    }
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw particles
-      particles.forEach(particle => {
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-
-        if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
-        if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(99, 102, 241, ${particle.opacity})`;
-        ctx.fill();
-      });
-
-      animationId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
 
   const handleStudentClick = () => {
     navigate('/register');
@@ -75,32 +13,121 @@ const HomePage = () => {
   };
 
   return (
-    <div className="home-page">
-      <canvas ref={canvasRef} className="background-canvas"></canvas>
-
-      <div className="welcome-text">
-        <pre>    Welcome,
-          to the
-                "Library Management System"</pre>
-      </div>
-
-      <div className="home-container">
-        <h1>Welcome to the Library Management System</h1>
-        <p>Choose your role to continue</p>
-
-        <div className="button-container">
-          <button className="btn student-btn" onClick={handleStudentClick}>
-            <span className="btn-icon">👨‍🎓</span>
-            <span className="btn-text">Student</span>
-          </button>
-
-          <button className="btn admin-btn" onClick={handleAdminClick}>
-            <span className="btn-icon">👨‍💼</span>
-            <span className="btn-text">Admin</span>
-          </button>
+    <>
+      <style>{`
+        .home-center-card {
+          min-height: 100vh;
+          width: 100vw;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #000000 0%, #0d3b66 100%);
+        }
+        .home-card {
+          background: rgba(13, 59, 102, 0.15);
+          padding: 3rem 2.5rem;
+          border-radius: 22px;
+          box-shadow: 0 8px 32px rgba(0, 191, 255, 0.15), 0 2px 8px rgba(0, 191, 255, 0.1);
+          backdrop-filter: blur(10px);
+          min-width: 340px;
+          max-width: 95vw;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          animation: fadeInUp 1.2s cubic-bezier(0.4,0,0.2,1);
+        }
+        .home-card h1 {
+          font-size: 2.4rem;
+          font-weight: 700;
+          color: #aee6ff;
+          margin-bottom: 0.7rem;
+          letter-spacing: 1px;
+          text-shadow: 0 2px 8px rgba(0,191,255,0.2);
+        }
+        .home-card p {
+          font-size: 1.15rem;
+          color: #d0f0ff;
+          margin-bottom: 2.2rem;
+          text-align: center;
+          text-shadow: 0 1px 4px rgba(0,191,255,0.15);
+        }
+        .home-btn-group {
+          display: flex;
+          gap: 24px;
+          width: 100%;
+          justify-content: center;
+        }
+        .home-btn {
+          min-width: 150px;
+          padding: 16px 32px;
+          border: none;
+          border-radius: 14px;
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #fff;
+          background: linear-gradient(135deg, #00bfff, #1e90ff);
+          box-shadow: 0 4px 16px rgba(0,191,255,0.25);
+          cursor: pointer;
+          transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .home-btn.student {
+          background: linear-gradient(135deg, #00bfff, #1e90ff);
+        }
+        .home-btn.admin {
+          background: linear-gradient(135deg, #0077b6, #00b4d8);
+        }
+        .home-btn:hover, .home-btn:focus {
+          transform: translateY(-3px) scale(1.03);
+          box-shadow: 0 8px 24px rgba(0,191,255,0.3);
+          outline: none;
+        }
+        .home-btn .btn-icon {
+          font-size: 1.5em;
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @media (max-width: 600px) {
+          .home-card {
+            min-width: 90vw;
+            padding: 1.5rem 0.5rem;
+          }
+          .home-card h1 {
+            font-size: 1.5rem;
+          }
+          .home-btn-group {
+            flex-direction: column;
+            gap: 16px;
+          }
+        }
+      `}</style>
+      <div className="home-center-card">
+        <div className="home-card">
+          <h1>Welcome to the AI & DS Library</h1>
+          <p>Choose your role to continue:</p>
+          <div className="home-btn-group">
+            <button className="home-btn student" onClick={handleStudentClick}>
+              <span className="btn-icon" role="img" aria-label="Student"></span>
+              Student
+            </button>
+            <button className="home-btn admin" onClick={handleAdminClick}>
+              <span className="btn-icon" role="img" aria-label="Admin"></span>
+              Admin
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -67,7 +67,7 @@ function Register() {
     <div className="register-container">
       <div className="register-card">
         <h2 className="register-title">Register</h2>
-        <p className="register-subtitle">Create your account. It's free and only takes a minute.</p>
+
 
         {success ? (
           <div className="success-message">
