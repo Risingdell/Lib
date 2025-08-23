@@ -14,8 +14,9 @@ function Login() {
   const navigate = useNavigate();
 
   const login = () => {
-    axios.post("http://localhost:5000/login", {
-      username,
+  axios.post(`${import.meta.env.VITE_API_URL}/login`, {
+
+    username,
       password
     }, {
       withCredentials: true
