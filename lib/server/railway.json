@@ -1,6 +1,5 @@
 {
   "$schema": "https://railway.com/railway.schema.json",
-  "rootDirectory": "server",
   "build": {
     "builder": "NIXPACKS",
     "buildCommand": "npm install"
