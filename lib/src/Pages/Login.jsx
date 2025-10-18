@@ -46,7 +46,8 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h2 className="login-title">Login</h2>
+        <h2 className="login-title">Welcome Back</h2>
+        <p className="login-subtitle">Sign in to access your library</p>
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="input-group">
             <input
@@ -56,7 +57,6 @@ function Login() {
               onChange={(e) => setUsername(e.target.value)}
               required
               autoComplete="off"
-              autoFill="off"
             />
           </div>
           <div className="input-group">
@@ -67,7 +67,6 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="new-password"
-              autoFill="off"
             />
           </div>
 

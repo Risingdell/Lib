@@ -6,13 +6,9 @@ import "./Register.css";
 
 function Register() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    usn: '',
     username: '',
-    email: '',
     password: '',
-    confirmPassword: ''
+    usn: ''
   });
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -31,29 +27,20 @@ function Register() {
       return;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match.");
-      return;
-    }
-
-    axios.post("http://localhost:5000/register", {
-      email: formData.email,
+    axios.post(`${import.meta.env.VITE_API_URL}/register`, {
       username: formData.username,
       password: formData.password,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
       usn: formData.usn
+    }, {
+      withCredentials: true
     })
     .then((response) => {
       console.log(response);
       setSuccess(true);
       setFormData({
-        firstName: '',
-        lastName: '',
-        usn: '',
-        email: '',
+        username: '',
         password: '',
-        confirmPassword: ''
+        usn: ''
       });
       setAcceptTerms(false);
     })
@@ -66,8 +53,8 @@ function Register() {
   return (
     <div className="register-container">
       <div className="register-card">
-        <h2 className="register-title">Register</h2>
-
+        <h2 className="register-title">Create Account</h2>
+        <p className="register-subtitle">Join our library community today</p>
 
         {success ? (
           <div className="success-message">
@@ -76,47 +63,6 @@ function Register() {
           </div>
         ) : (
           <form className="register-form" onSubmit={(e) => { e.preventDefault(); register(); }}>
-            <Link to="/login" className="login-link">Go to Login</Link>
-            <div className="name-row">
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  placeholder="First Name"
-                  required
-                  autoComplete="off"
-                  autoFill="off"
-                />
-              </div>
-              <div className="input-group">
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  placeholder="Last Name"
-                  required
-                  autoComplete="off"
-                  autoFill="off"
-                />
-              </div>
-            </div>
-
-            <div className="input-group">
-              <input
-                type="text"
-                name="usn"
-                value={formData.usn}
-                onChange={handleInputChange}
-                placeholder="USN"
-                required
-                autoComplete="off"
-                autoFill="off"
-              />
-            </div>
-
             <div className="input-group">
               <input
                 type="text"
@@ -126,20 +72,6 @@ function Register() {
                 placeholder="Username"
                 required
                 autoComplete="off"
-                autoFill="off"
-              />
-            </div>
-
-            <div className="input-group">
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Email"
-                required
-                autoComplete="off"
-                autoFill="off"
               />
             </div>
 
@@ -151,31 +83,41 @@ function Register() {
                 onChange={handleInputChange}
                 placeholder="Password"
                 required
-                autoComplete="new-password"
-                autoFill="off"
+                autoComplete="off"
               />
             </div>
 
             <div className="input-group">
               <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
+                type="text"
+                name="usn"
+                value={formData.usn}
                 onChange={handleInputChange}
-                placeholder="Confirm Password"
+                placeholder="USN"
                 required
-                autoComplete="new-password"
-                autoFill="off"
+                autoComplete="off"
               />
             </div>
 
-
+            <div className="terms-group">
+              <label className="terms-label">
+                <input
+                  type="checkbox"
+                  checked={acceptTerms}
+                  onChange={(e) => setAcceptTerms(e.target.checked)}
+                  required
+                />
+                <span>I accept the Terms of Use & Privacy Policy</span>
+              </label>
+            </div>
 
             <button type="submit" className="register-button">
               Register Now
             </button>
 
-
+            <div className="login-prompt">
+              Already have an account? <Link to="/login" className="login-link">Sign In</Link>
+            </div>
           </form>
         )}
       </div>

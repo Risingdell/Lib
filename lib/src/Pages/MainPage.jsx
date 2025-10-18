@@ -14,11 +14,19 @@ const MainPage = () => {
   const [user, setUser] = useState(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('books');
+  const [profileImage, setProfileImage] = useState(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/user/profile', { withCredentials: true })
-      .then(response => setUser(response.data))
+      .then(response => {
+        setUser(response.data);
+        // Set profile image if it exists
+        if (response.data.profileImage) {
+          setProfileImage(response.data.profileImage);
+        }
+      })
       .catch(() => navigate('/login'));
   }, [navigate]);
 
@@ -150,6 +158,62 @@ const handleBuy = (bookId) => {
       });
   };
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size should be less than 5MB');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('profileImage', file);
+
+    setIsUploadingImage(true);
+
+    axios.post('http://localhost:5000/api/user/upload-profile-image', formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then(response => {
+        setProfileImage(response.data.imageUrl);
+        alert('Profile image updated successfully!');
+      })
+      .catch(err => {
+        console.error('Image upload failed', err);
+        alert('Failed to upload image. Please try again.');
+      })
+      .finally(() => {
+        setIsUploadingImage(false);
+      });
+  };
+
+  const handleRemoveImage = () => {
+    if (!window.confirm('Are you sure you want to remove your profile picture?')) {
+      return;
+    }
+
+    axios.delete('http://localhost:5000/api/user/remove-profile-image', { withCredentials: true })
+      .then(() => {
+        setProfileImage(null);
+        alert('Profile image removed successfully!');
+      })
+      .catch(err => {
+        console.error('Failed to remove image', err);
+        alert('Failed to remove image. Please try again.');
+      });
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'books':
@@ -183,21 +247,58 @@ const handleBuy = (bookId) => {
               <div className="empty-state"><p>No books currently borrowed</p></div>
             ) : (
               <div className="books-grid">
-                {borrowedBooks.map(book => (
-                  <div key={book.id} className="book-card">
-                    <div className="book-info">
-                      <h3 className="book-title">{book.title}</h3>
-                      <p className="book-author">by {book.author}</p>
-                      <p className="book-remarks">Donated by: {book.donated_by}</p>
-                      <div className="book-details">
-                        <span className="book-acc">Acc. No: {book.acc_no}</span>
-                        <span className="book-date">Borrowed on: {new Date(book.borrow_date).toLocaleDateString()}</span>
-                        <span className="book-date">Expires on: {new Date(book.expiry_date).toLocaleDateString()}</span>
+                {borrowedBooks.map(book => {
+                  const isPending = book.return_status === 'pending_return';
+                  const isRejected = book.return_status === 'rejected';
+                  const isActive = book.return_status === 'active' || !book.return_status;
+
+                  return (
+                    <div key={book.id} className={`book-card ${isPending ? 'pending-return' : ''} ${isRejected ? 'rejected-return' : ''}`}>
+                      <div className="book-info">
+                        <h3 className="book-title">{book.title}</h3>
+                        <p className="book-author">by {book.author}</p>
+                        <p className="book-remarks">Donated by: {book.donated_by}</p>
+                        <div className="book-details">
+                          <span className="book-acc">Acc. No: {book.acc_no}</span>
+                          <span className="book-date">Borrowed on: {new Date(book.borrow_date).toLocaleDateString()}</span>
+                          <span className="book-date">Expires on: {new Date(book.expiry_date).toLocaleDateString()}</span>
+                        </div>
+
+                        {/* Return Status Indicators */}
+                        {isPending && (
+                          <div className="return-status pending">
+                            <span className="status-icon">⏳</span>
+                            <span className="status-text">Return Pending Admin Approval</span>
+                          </div>
+                        )}
+
+                        {isRejected && (
+                          <div className="return-status rejected">
+                            <span className="status-icon">❌</span>
+                            <span className="status-text">Return Rejected</span>
+                            {book.rejection_reason && (
+                              <p className="rejection-reason">Reason: {book.rejection_reason}</p>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Submit Button - only show if active or rejected */}
+                        {(isActive || isRejected) && (
+                          <button className="borrow-btn" onClick={() => handleReturn(book.id)}>
+                            {isRejected ? 'Re-submit Book' : 'Submit Book'}
+                          </button>
+                        )}
+
+                        {/* Disabled button for pending */}
+                        {isPending && (
+                          <button className="borrow-btn disabled" disabled>
+                            Awaiting Approval
+                          </button>
+                        )}
                       </div>
-                      <button className="borrow-btn" onClick={() => handleReturn(book.id)}>Submit Book</button>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -379,8 +480,36 @@ const handleBuy = (bookId) => {
         </button>
 
         <div className="user-profile">
-          <div className="user-avatar">
-            <span>{user.firstName?.charAt(0).toUpperCase()}{user.lastName?.charAt(0).toUpperCase()}</span>
+          <div className="avatar-container">
+            <div className="user-avatar">
+              {profileImage ? (
+                <img src={profileImage} alt="Profile" className="profile-image" />
+              ) : (
+                <span>{user.firstName?.charAt(0).toUpperCase()}{user.lastName?.charAt(0).toUpperCase()}</span>
+              )}
+            </div>
+            <div className="avatar-upload-buttons">
+              <label htmlFor="profile-image-upload" className="upload-icon-btn" title="Upload profile picture">
+                {isUploadingImage ? '⏳' : '+'}
+              </label>
+              <input
+                id="profile-image-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                style={{ display: 'none' }}
+                disabled={isUploadingImage}
+              />
+              <button
+                className="remove-icon-btn"
+                onClick={handleRemoveImage}
+                title="Remove profile picture"
+                disabled={isUploadingImage || !profileImage}
+                style={{ opacity: profileImage ? 1 : 0.3, cursor: profileImage ? 'pointer' : 'not-allowed' }}
+              >
+                −
+              </button>
+            </div>
           </div>
           <h3 className="user-name">{user.firstName} {user.lastName}</h3>
           <p className="user-username">@{user.username}</p>
