@@ -3,7 +3,7 @@ import axios from 'axios';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [admin, setAdmin] = useState(null);
   const [activeTab, setActiveTab] = useState('profile');
   const [borrowedBooks, setBorrowedBooks] = useState([]);
@@ -142,6 +142,8 @@ const AdminDashboard = () => {
 
   return (
     <div className="main-page">
+      <div className={`sidebar-overlay ${!sidebarCollapsed ? 'active' : ''}`} onClick={toggleSidebar}></div>
+
       {/* Maximize button when sidebar is collapsed */}
       {sidebarCollapsed && (
         <button className="maximize-btn" onClick={toggleSidebar} aria-label="Expand sidebar">
@@ -191,6 +193,18 @@ const AdminDashboard = () => {
         </div>
       </div>
       <div className="main-content">
+        <header className="mobile-header">
+          <button className="mobile-menu-btn" onClick={toggleSidebar} aria-label="Toggle menu">
+            ☰
+          </button>
+          <h1 className="page-title">
+            {activeTab === 'profile' && 'Admin Profile'}
+            {activeTab === 'borrowed' && 'Borrowed Books'}
+            {activeTab === 'expired' && 'Expired Books'}
+            {activeTab === 'pending-returns' && 'Pending Returns'}
+            {activeTab === 'add' && 'Add Books'}
+          </h1>
+        </header>
         <div className="content-area">
           {activeTab === 'profile' && (
             <div className="dashboard-content">
