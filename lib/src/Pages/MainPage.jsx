@@ -657,11 +657,11 @@ const MainPage = () => {
 
   useEffect(() => {
     if (activeTab === 'view-sell') {
-      axios.get(`${API_URL}/sell-books', { withCredentials: true })
+      axios.get(`${API_URL}/sell-books`, { withCredentials: true })
         .then(res => setSellingBooks(res.data))
         .catch(err => console.error('Failed to fetch selling books', err));
     } else if (activeTab === 'requested-sell') {
-      axios.get(`${API_URL}/sell-books/my-requests', { withCredentials: true })
+      axios.get(`${API_URL}/sell-books/my-requests`, { withCredentials: true })
         .then(res => setRequestedBooks(res.data))
         .catch(err => console.error('Failed to fetch requested books', err));
     }
@@ -669,7 +669,7 @@ const MainPage = () => {
 
   // Load requested books count for sidebar badge
   useEffect(() => {
-    axios.get(`${API_URL}/sell-books/my-requests', { withCredentials: true })
+    axios.get(`${API_URL}/sell-books/my-requests`, { withCredentials: true })
       .then(res => setRequestedBooks(res.data))
       .catch(err => console.error('Failed to fetch requested books', err));
   }, []);
@@ -690,7 +690,7 @@ const MainPage = () => {
   };
 
   const handleRequest = (id) => {
-    axios.post(`${API_URL}/sell-books/request', { id }, { withCredentials: true })
+    axios.post(`${API_URL}/sell-books/request`, { id }, { withCredentials: true })
       .then((response) => {
         alert(response.data.message);
         reloadSellingBooks();
@@ -705,7 +705,7 @@ const MainPage = () => {
   const handleCancelRequest = (id) => {
     if (!window.confirm('Are you sure you want to cancel this request?')) return;
 
-    axios.post(`${API_URL}/sell-books/cancel-request', { id }, { withCredentials: true })
+    axios.post(`${API_URL}/sell-books/cancel-request`, { id }, { withCredentials: true })
       .then((response) => {
         alert(response.data.message);
         reloadSellingBooks();
@@ -720,7 +720,7 @@ const MainPage = () => {
   const handleMarkSold = (id) => {
     if (!window.confirm('Mark this book as sold to the current buyer?')) return;
 
-    axios.post(`${API_URL}/sell-books/mark-sold', { id }, { withCredentials: true })
+    axios.post(`${API_URL}/sell-books/mark-sold`, { id }, { withCredentials: true })
       .then((response) => {
         alert(response.data.message);
         reloadSellingBooks();
@@ -734,7 +734,7 @@ const MainPage = () => {
   const handleConfirmReceive = (id) => {
     if (!window.confirm('Confirm that you have received this book?')) return;
 
-    axios.post(`${API_URL}/sell-books/confirm-receive', { id }, { withCredentials: true })
+    axios.post(`${API_URL}/sell-books/confirm-receive`, { id }, { withCredentials: true })
       .then((response) => {
         alert(response.data.message);
         reloadSellingBooks();
@@ -747,19 +747,19 @@ const MainPage = () => {
   };
 
   const reloadSellingBooks = () => {
-    axios.get(`${API_URL}/sell-books', { withCredentials: true })
+    axios.get(`${API_URL}/sell-books`, { withCredentials: true })
       .then(res => setSellingBooks(res.data));
   };
 
   const reloadRequestedBooks = () => {
-    axios.get(`${API_URL}/sell-books/my-requests', { withCredentials: true })
+    axios.get(`${API_URL}/sell-books/my-requests`, { withCredentials: true })
       .then(res => setRequestedBooks(res.data));
   };
 
   const handleCancelSell = (id) => {
     if (!window.confirm('Are you sure you want to remove this listing?')) return;
 
-    axios.delete(`http://localhost:5000/sell-books/${id}`, { withCredentials: true })
+    axios.delete(`${API_URL}/sell-books/${id}`, { withCredentials: true })
       .then(() => {
         alert('Listing removed successfully');
         reloadSellingBooks();

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './AdminDashboard.css';
 
-const API_URL = import.meta.env.VITE_API_URL || '${API_URL}';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const AdminDashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
@@ -25,7 +25,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
-        const res = await axios.get('${API_URL}/api/admin/me', { withCredentials: true });
+        const res = await axios.get(`${API_URL}/api/admin/me`, { withCredentials: true });
         if (res.data && res.data.id) {
           setAdmin(res.data);
         } else {
@@ -45,13 +45,13 @@ const AdminDashboard = () => {
       try {
         let res;
         if (activeTab === 'borrowed') {
-          res = await axios.get('${API_URL}/api/admin/borrowed-books');
+          res = await axios.get(`${API_URL}/api/admin/borrowed-books`);
           if (res) setBorrowedBooks(res.data);
         } else if (activeTab === 'expired') {
-          res = await axios.get('${API_URL}/api/admin/expired-books');
+          res = await axios.get(`${API_URL}/api/admin/expired-books`);
           if (res) setBorrowedBooks(res.data);
         } else if (activeTab === 'pending-returns') {
-          res = await axios.get('${API_URL}/api/admin/pending-returns', { withCredentials: true });
+          res = await axios.get(`${API_URL}/api/admin/pending-returns`, { withCredentials: true });
           if (res) setPendingReturns(res.data);
         }
       } catch (err) {
@@ -96,13 +96,13 @@ const AdminDashboard = () => {
 
     try {
       const res = await axios.post(
-        '${API_URL}/api/admin/approve-return',
+        `${API_URL}/api/admin/approve-return`,
         { borrow_id: borrowId },
         { withCredentials: true }
       );
       alert(res.data.message);
       // Refresh pending returns list
-      const updatedRes = await axios.get('${API_URL}/api/admin/pending-returns', { withCredentials: true });
+      const updatedRes = await axios.get(`${API_URL}/api/admin/pending-returns`, { withCredentials: true });
       setPendingReturns(updatedRes.data);
     } catch (err) {
       console.error('Approve failed:', err);
@@ -119,13 +119,13 @@ const AdminDashboard = () => {
 
     try {
       const res = await axios.post(
-        '${API_URL}/api/admin/reject-return',
+        `${API_URL}/api/admin/reject-return`,
         { borrow_id: borrowId, reason: reason.trim() },
         { withCredentials: true }
       );
       alert(res.data.message);
       // Refresh pending returns list
-      const updatedRes = await axios.get('${API_URL}/api/admin/pending-returns', { withCredentials: true });
+      const updatedRes = await axios.get(`${API_URL}/api/admin/pending-returns`, { withCredentials: true });
       setPendingReturns(updatedRes.data);
     } catch (err) {
       console.error('Reject failed:', err);
