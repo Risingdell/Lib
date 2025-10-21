@@ -65,7 +65,7 @@ const MainPage = () => {
   useEffect(() => {
     if (activeTab === 'view-sell') {
       const url = API_URL + '/sell-books';
-      axios.get(`${url}`, { withCredentials: true })
+      axios.get(url, { withCredentials: true })
         .then(res => setSellingBooks(res.data))
         .catch(err => console.error('Failed to fetch selling books', err));
     } else if (activeTab === 'requested-sell') {
@@ -104,11 +104,6 @@ const MainPage = () => {
   const handleRequest = (id) => {
     const url = API_URL + '/sell-books/request';
     axios.post(url, { id }, { withCredentials: true })
-      .then((response) => {
-        alert(response.data.message);
-        reloadSellingBooks();
-        reloadRequestedBooks();
-      })
       .then((response) => {
         alert(response.data.message);
         reloadSellingBooks();
