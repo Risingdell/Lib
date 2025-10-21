@@ -630,15 +630,15 @@ const MainPage = () => {
 
   useEffect(() => {
     if (activeTab === 'books') {
-      axios.get(`${API_URL}/books')
+      axios.get(`${API_URL}/books`)
         .then(res => setAvailableBooks(res.data))
         .catch(err => console.error('Error fetching books:', err));
     } else if (activeTab === 'borrowed') {
-      axios.get(`${API_URL}/borrowed-books', { withCredentials: true })
+      axios.get(`${API_URL}/borrowed-books`, { withCredentials: true })
         .then(res => setBorrowedBooks(res.data))
         .catch(err => console.error('Failed to fetch borrowed books', err));
     } else if (activeTab === 'history') {
-      axios.get(`${API_URL}/borrow-history', { withCredentials: true })
+      axios.get(`${API_URL}/borrow-history`, { withCredentials: true })
         .then(res => setHistoryBooks(res.data))
         .catch(err => console.error('Failed to fetch history', err));
     }
@@ -675,11 +675,11 @@ const MainPage = () => {
   }, []);
 
   const handleBorrow = (bookId) => {
-    axios.post(`${API_URL}/borrow', { book_id: bookId }, { withCredentials: true })
+    axios.post(`${API_URL}/borrow`, { book_id: bookId }, { withCredentials: true })
       .then(res => {
         alert(res.data.message);
         if (activeTab === 'books') {
-          axios.get(`${API_URL}/books')
+          axios.get(`${API_URL}/books`)
             .then(res => setAvailableBooks(res.data));
         }
       })
@@ -768,14 +768,14 @@ const MainPage = () => {
   };
 
   const handleReturn = (bookId) => {
-    axios.post(`${API_URL}/return-book', { book_id: bookId }, { withCredentials: true })
+    axios.post(`${API_URL}/return-book`, { book_id: bookId }, { withCredentials: true })
       .then(res => {
         alert(res.data.message);
         if (activeTab === 'borrowed') {
-          axios.get(`${API_URL}/borrowed-books', { withCredentials: true })
+          axios.get(`${API_URL}/borrowed-books`, { withCredentials: true })
             .then(res => setBorrowedBooks(res.data));
         }
-        axios.get(`${API_URL}/books')
+        axios.get(`${API_URL}/books`)
           .then(res => setAvailableBooks(res.data));
       })
       .catch(err => {
@@ -953,7 +953,7 @@ const MainPage = () => {
                 contact: formData.get('contact'),
                 status: 'available'
               };
-              axios.post(`${API_URL}/sell-book', data, { withCredentials: true })
+              axios.post(`${API_URL}/sell-book`, data, { withCredentials: true })
                 .then(() => {
                   setSellStatusMessage('✅ Book is Available for selling.');
                   e.target.reset();
@@ -1278,7 +1278,7 @@ const MainPage = () => {
           <button
             className="nav-item logout-btn"
             onClick={() => {
-              axios.post(`${API_URL}/api/user/logout', {}, { withCredentials: true })
+              axios.post(`${API_URL}/api/user/logout`, {}, { withCredentials: true })
                 .then(() => navigate('/login'))
                 .catch(() => navigate('/login'));
             }}
