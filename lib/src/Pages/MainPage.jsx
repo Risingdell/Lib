@@ -1,4 +1,3 @@
-// Updated MainPage.jsx - Removed full-width class and fixed layout
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MainPage.css';
@@ -66,7 +65,7 @@ const MainPage = () => {
   useEffect(() => {
     if (activeTab === 'view-sell') {
       const url = API_URL + '/sell-books';
-      axios.get(url, { withCredentials: true })
+      axios.get(`${url}`, { withCredentials: true })
         .then(res => setSellingBooks(res.data))
         .catch(err => console.error('Failed to fetch selling books', err));
     } else if (activeTab === 'requested-sell') {
@@ -105,6 +104,11 @@ const MainPage = () => {
   const handleRequest = (id) => {
     const url = API_URL + '/sell-books/request';
     axios.post(url, { id }, { withCredentials: true })
+      .then((response) => {
+        alert(response.data.message);
+        reloadSellingBooks();
+        reloadRequestedBooks();
+      })
       .then((response) => {
         alert(response.data.message);
         reloadSellingBooks();
@@ -686,7 +690,6 @@ const MainPage = () => {
             <span className="nav-icon">🛒</span>
             <span className="nav-text">Marketplace</span>
           </button>
-
           <button
             className={'nav-item ' + (activeTab === 'requested-sell' ? 'active' : '')}
             onClick={() => setActiveTab('requested-sell')}
