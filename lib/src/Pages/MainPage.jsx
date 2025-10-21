@@ -294,7 +294,7 @@ const MainPage = () => {
                   const isRejected = book.return_status === 'rejected';
                   const isActive = book.return_status === 'active' || !book.return_status;
                   return (
-                    <div key={book.id} className={`book-card ${isPending ? 'pending-return' : ''} ${isRejected ? 'rejected-return' : ''}`}>
+                    <div key={book.id} className={'book-card ' + (isPending ? 'pending-return' : '') + ' ' + (isRejected ? 'rejected-return' : '')}>
                       <div className="book-info">
                         <h3 className="book-title">{book.title}</h3>
                         <p className="book-author">by {book.author}</p>
@@ -444,7 +444,7 @@ const MainPage = () => {
                         <p className="book-remarks">{item.description}</p>
                         <div className="book-details">
                           <span className="book-acc">Acc. No: {item.acc_no}</span>
-                          <span className={`book-status status-${item.status}`}>
+                          <span className={'book-status status-' + item.status}>
                             Status: {item.status}
                           </span>
                         </div>
@@ -457,7 +457,7 @@ const MainPage = () => {
                               <div className="requesters-list">
                                 <p className="list-title">Request Queue:</p>
                                 {item.requesters.map((req, idx) => (
-                                  <div key={req.id} className={`requester-item ${req.is_priority_buyer ? 'priority' : ''}`}>
+                                  <div key={req.id} className={'requester-item ' + (req.is_priority_buyer ? 'priority' : '')}>
                                     <span className="position">{idx + 1}.</span>
                                     <span className="name">{req.username}</span>
                                     {req.is_priority_buyer && <span className="badge">🎯 Active</span>}
@@ -474,7 +474,7 @@ const MainPage = () => {
                         {/* Contact info */}
                         <a
                           className="book-contact"
-                          href={`https://wa.me/${item.contact?.replace(/\D/g, '')}`}
+                          href={'https://wa.me/' + (item.contact ? item.contact.replace(/\D/g, '') : '')}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -567,7 +567,7 @@ const MainPage = () => {
                       </div>
                       <div className="request-info">
                         <p>Requested: {new Date(item.requested_at).toLocaleDateString()}</p>
-                        <p className={`queue-position ${item.is_priority_buyer ? 'priority' : ''}`}>
+                        <p className={'queue-position ' + (item.is_priority_buyer ? 'priority' : '')}>
                           {item.is_priority_buyer ? (
                             <>🎯 You are first in line!</>
                           ) : (
@@ -605,13 +605,13 @@ const MainPage = () => {
 
   return (
     <div className="main-page">
-      <div className={`sidebar-overlay ${!sidebarCollapsed ? 'active' : ''}`} onClick={() => setSidebarCollapsed(true)}></div>
+      <div className={'sidebar-overlay ' + (!sidebarCollapsed ? 'active' : '')} onClick={() => setSidebarCollapsed(true)}></div>
       {sidebarCollapsed && (
         <button className="maximize-btn" onClick={() => setSidebarCollapsed(false)}>
           <span className="nav-icon">☰</span>
         </button>
       )}
-      <div className={`user-sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+      <div className={'user-sidebar ' + (sidebarCollapsed ? 'collapsed' : '')}>
         <button className="sidebar-toggle" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
           {sidebarCollapsed ? '☰' : '✕'}
         </button>
@@ -652,35 +652,35 @@ const MainPage = () => {
         </div>
         <nav className="sidebar-nav">
           <button
-            className={`nav-item ${activeTab === 'books' ? 'active' : ''}`}
+            className={'nav-item ' + (activeTab === 'books' ? 'active' : '')}
             onClick={() => setActiveTab('books')}
           >
             <span className="nav-icon">🏠</span>
             <span className="nav-text">Home</span>
           </button>
           <button
-            className={`nav-item ${activeTab === 'borrowed' ? 'active' : ''}`}
+            className={'nav-item ' + (activeTab === 'borrowed' ? 'active' : '')}
             onClick={() => setActiveTab('borrowed')}
           >
             <span className="nav-icon">📖</span>
             <span className="nav-text">My Books</span>
           </button>
           <button
-            className={`nav-item ${activeTab === 'history' ? 'active' : ''}`}
+            className={'nav-item ' + (activeTab === 'history' ? 'active' : '')}
             onClick={() => setActiveTab('history')}
           >
             <span className="nav-icon">📋</span>
             <span className="nav-text">History</span>
           </button>
           <button
-            className={`nav-item ${activeTab === 'sell' ? 'active' : ''}`}
+            className={'nav-item ' + (activeTab === 'sell' ? 'active' : '')}
             onClick={() => setActiveTab('sell')}
           >
             <span className="nav-icon">💼</span>
             <span className="nav-text">Sell Book</span>
           </button>
           <button
-            className={`nav-item ${activeTab === 'view-sell' ? 'active' : ''}`}
+            className={'nav-item ' + (activeTab === 'view-sell' ? 'active' : '')}
             onClick={() => setActiveTab('view-sell')}
           >
             <span className="nav-icon">🛒</span>
@@ -688,7 +688,7 @@ const MainPage = () => {
           </button>
 
           <button
-            className={`nav-item ${activeTab === 'requested-sell' ? 'active' : ''}`}
+            className={'nav-item ' + (activeTab === 'requested-sell' ? 'active' : '')}
             onClick={() => setActiveTab('requested-sell')}
           >
             <span className="nav-icon">📥</span>
