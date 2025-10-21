@@ -158,7 +158,7 @@ Railway provides $5 free credits monthly, then pay-as-you-go.
 
    **Option A: Using MySQL Workbench**
    - Download connection details
-   - Import your database schema
+   - Import your database schema/*
    - Run migrations in order:
      1. Create tables (books, users, admins, etc.)
      2. `migrations/001_add_return_approval_workflow.sql`
