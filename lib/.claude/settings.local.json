@@ -13,7 +13,9 @@
       "Bash(node index.js:*)",
       "Bash(npm install:*)",
       "Bash(tasklist:*)",
-      "Bash(node -c \"C:\\xampp\\htdocs\\Lib\\Lib\\lib\\server\\routes\\admin.js\")"
+      "Bash(node -c \"C:\\xampp\\htdocs\\Lib\\Lib\\lib\\server\\routes\\admin.js\")",
+      "Read(//c/xampp/htdocs/Lib/Lib/**)",
+      "Bash(git ls-tree:*)"
     ],
     "deny": [],
     "ask": []
