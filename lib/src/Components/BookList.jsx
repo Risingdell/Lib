@@ -5,7 +5,8 @@ const BookList = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/books') // your backend endpoint
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    axios.get(`${API_URL}/books`)
       .then(res => setBooks(res.data))
       .catch(err => console.error(err));
   }, []);

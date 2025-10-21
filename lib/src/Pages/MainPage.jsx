@@ -19,7 +19,7 @@
 //   const navigate = useNavigate();
 
 //   useEffect(() => {
-//     axios.get('http://localhost:5000/api/user/profile', { withCredentials: true })
+//     axios.get(`${API_URL}/api/user/profile`, { withCredentials: true })
 //       .then(response => {
 //         setUser(response.data);
 //         // Set profile image if it exists
@@ -32,22 +32,22 @@
 
 //   useEffect(() => {
 //     if (activeTab === 'books') {
-//       axios.get('http://localhost:5000/books')
+//       axios.get(`${API_URL}/books')
 //         .then(res => setAvailableBooks(res.data))
 //         .catch(err => console.error('Error fetching books:', err));
 //     } else if (activeTab === 'borrowed') {
-//       axios.get('http://localhost:5000/borrowed-books', { withCredentials: true })
+//       axios.get(`${API_URL}/borrowed-books', { withCredentials: true })
 //         .then(res => setBorrowedBooks(res.data))
 //         .catch(err => console.error('Failed to fetch borrowed books', err));
 //     } else if (activeTab === 'history') {
-//       axios.get('http://localhost:5000/borrow-history', { withCredentials: true })
+//       axios.get(`${API_URL}/borrow-history', { withCredentials: true })
 //         .then(res => setHistoryBooks(res.data))
 //         .catch(err => console.error('Failed to fetch history', err));
 //     }
 //   }, [activeTab]);
 // useEffect(() => {
 //   axios
-//     .get('http://localhost:5000/sell-books', { withCredentials: true })
+//     .get(`${API_URL}/sell-books', { withCredentials: true })
 //     .then((res) => {
 //       setSellingBooks(res.data);
 //     })
@@ -61,7 +61,7 @@
 
 // useEffect(() => {
 //   if (activeTab === 'view-sell') {
-//     axios.get('http://localhost:5000/api/sell-books', { withCredentials: true })
+//     axios.get(`${API_URL}/api/sell-books', { withCredentials: true })
 //       .then(res => setSellingBooks(res.data))
 //       .catch(err => console.error('Failed to fetch selling books', err));
 //   }
@@ -73,11 +73,11 @@
 
 
 //   const handleBorrow = (bookId) => {
-//     axios.post('http://localhost:5000/borrow', { book_id: bookId }, { withCredentials: true })
+//     axios.post(`${API_URL}/borrow', { book_id: bookId }, { withCredentials: true })
 //       .then(res => {
 //         alert(res.data.message);
 //         if (activeTab === 'books') {
-//           axios.get('http://localhost:5000/books')
+//           axios.get(`${API_URL}/books')
 //             .then(res => setAvailableBooks(res.data));
 //         }
 //       })
@@ -100,13 +100,13 @@
 //     });
 // };*/
 //  const handleRequest = (id) => {
-//   axios.post('http://localhost:5000/api/sell-books/request', { id }, { withCredentials: true })
+//   axios.post(`${API_URL}/api/sell-books/request', { id }, { withCredentials: true })
 //     .then(() => reloadSellingBooks())
 //     .catch(() => alert('❌ Request failed'));
 // };
 
 // const handleConfirmReceive = (id) => {
-//   axios.post('http://localhost:5000/api/sell-books/confirm-receive', { id }, { withCredentials: true })
+//   axios.post(`${API_URL}/api/sell-books/confirm-receive', { id }, { withCredentials: true })
 //     .then(() => reloadSellingBooks())
 //     .catch(() => alert('❌ Confirm failed'));
 // };
@@ -114,7 +114,7 @@
 
 
 // const reloadSellingBooks = () => {
-//   axios.get('http://localhost:5000/api/sell-books', { withCredentials: true })
+//   axios.get(`${API_URL}/api/sell-books', { withCredentials: true })
 //     .then(res => setSellingBooks(res.data));
 // };
 // const handleCancelSell = (id) => {
@@ -124,7 +124,7 @@
 // };
 
 // const handleBuy = (bookId) => {
-//   axios.post('http://localhost:5000/sell-books/buy', { id: bookId }, { withCredentials: true })
+//   axios.post(`${API_URL}/sell-books/buy', { id: bookId }, { withCredentials: true })
 //     .then(() => {
 //       // ❌ DO NOT remove book from UI list anymore
 //       reloadSellingBooks(); // ✅ Refresh the list to reflect changes
@@ -142,14 +142,14 @@
 
 
 //   const handleReturn = (bookId) => {
-//     axios.post('http://localhost:5000/return-book', { book_id: bookId }, { withCredentials: true })
+//     axios.post(`${API_URL}/return-book', { book_id: bookId }, { withCredentials: true })
 //       .then(res => {
 //         alert(res.data.message);
 //         if (activeTab === 'borrowed') {
-//           axios.get('http://localhost:5000/borrowed-books', { withCredentials: true })
+//           axios.get(`${API_URL}/borrowed-books', { withCredentials: true })
 //             .then(res => setBorrowedBooks(res.data));
 //         }
-//         axios.get('http://localhost:5000/books')
+//         axios.get(`${API_URL}/books')
 //           .then(res => setAvailableBooks(res.data));
 //       })
 //       .catch(err => {
@@ -179,7 +179,7 @@
 
 //     setIsUploadingImage(true);
 
-//     axios.post('http://localhost:5000/api/user/upload-profile-image', formData, {
+//     axios.post(`${API_URL}/api/user/upload-profile-image', formData, {
 //       withCredentials: true,
 //       headers: {
 //         'Content-Type': 'multipart/form-data',
@@ -203,7 +203,7 @@
 //       return;
 //     }
 
-//     axios.delete('http://localhost:5000/api/user/remove-profile-image', { withCredentials: true })
+//     axios.delete(`${API_URL}/api/user/remove-profile-image', { withCredentials: true })
 //       .then(() => {
 //         setProfileImage(null);
 //         alert('Profile image removed successfully!');
@@ -346,7 +346,7 @@
 //                 contact: formData.get('contact'),
 //                 status: 'available'
 //               };
-//               axios.post('http://localhost:5000/sell-book', data, { withCredentials: true })
+//               axios.post(`${API_URL}/sell-book', data, { withCredentials: true })
 //                 .then(() => {
 //                   setSellStatusMessage('✅ Book is Available for selling.');
 //                   e.target.reset();
@@ -561,7 +561,7 @@
 //           <button
 //             className="nav-item logout-btn"
 //             onClick={() => {
-//               axios.post('http://localhost:5000/api/user/logout', {}, { withCredentials: true })
+//               axios.post(`${API_URL}/api/user/logout', {}, { withCredentials: true })
 //                 .then(() => navigate('/login'))
 //                 .catch(() => navigate('/login'));
 //             }}
@@ -601,6 +601,8 @@ import { useNavigate } from 'react-router-dom';
 import './MainPage.css';
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
 const MainPage = () => {
   const [sellStatusMessage, setSellStatusMessage] = useState('');
   const [availableBooks, setAvailableBooks] = useState([]);
@@ -616,7 +618,7 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/user/profile', { withCredentials: true })
+    axios.get(`${API_URL}/api/user/profile`, { withCredentials: true })
       .then(response => {
         setUser(response.data);
         if (response.data.profileImage) {
@@ -628,15 +630,15 @@ const MainPage = () => {
 
   useEffect(() => {
     if (activeTab === 'books') {
-      axios.get('http://localhost:5000/books')
+      axios.get(`${API_URL}/books')
         .then(res => setAvailableBooks(res.data))
         .catch(err => console.error('Error fetching books:', err));
     } else if (activeTab === 'borrowed') {
-      axios.get('http://localhost:5000/borrowed-books', { withCredentials: true })
+      axios.get(`${API_URL}/borrowed-books', { withCredentials: true })
         .then(res => setBorrowedBooks(res.data))
         .catch(err => console.error('Failed to fetch borrowed books', err));
     } else if (activeTab === 'history') {
-      axios.get('http://localhost:5000/borrow-history', { withCredentials: true })
+      axios.get(`${API_URL}/borrow-history', { withCredentials: true })
         .then(res => setHistoryBooks(res.data))
         .catch(err => console.error('Failed to fetch history', err));
     }
@@ -644,7 +646,7 @@ const MainPage = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/sell-books', { withCredentials: true })
+      .get(`${API_URL}/sell-books', { withCredentials: true })
       .then((res) => {
         setSellingBooks(res.data);
       })
@@ -655,11 +657,11 @@ const MainPage = () => {
 
   useEffect(() => {
     if (activeTab === 'view-sell') {
-      axios.get('http://localhost:5000/sell-books', { withCredentials: true })
+      axios.get(`${API_URL}/sell-books', { withCredentials: true })
         .then(res => setSellingBooks(res.data))
         .catch(err => console.error('Failed to fetch selling books', err));
     } else if (activeTab === 'requested-sell') {
-      axios.get('http://localhost:5000/sell-books/my-requests', { withCredentials: true })
+      axios.get(`${API_URL}/sell-books/my-requests', { withCredentials: true })
         .then(res => setRequestedBooks(res.data))
         .catch(err => console.error('Failed to fetch requested books', err));
     }
@@ -667,17 +669,17 @@ const MainPage = () => {
 
   // Load requested books count for sidebar badge
   useEffect(() => {
-    axios.get('http://localhost:5000/sell-books/my-requests', { withCredentials: true })
+    axios.get(`${API_URL}/sell-books/my-requests', { withCredentials: true })
       .then(res => setRequestedBooks(res.data))
       .catch(err => console.error('Failed to fetch requested books', err));
   }, []);
 
   const handleBorrow = (bookId) => {
-    axios.post('http://localhost:5000/borrow', { book_id: bookId }, { withCredentials: true })
+    axios.post(`${API_URL}/borrow', { book_id: bookId }, { withCredentials: true })
       .then(res => {
         alert(res.data.message);
         if (activeTab === 'books') {
-          axios.get('http://localhost:5000/books')
+          axios.get(`${API_URL}/books')
             .then(res => setAvailableBooks(res.data));
         }
       })
@@ -688,7 +690,7 @@ const MainPage = () => {
   };
 
   const handleRequest = (id) => {
-    axios.post('http://localhost:5000/sell-books/request', { id }, { withCredentials: true })
+    axios.post(`${API_URL}/sell-books/request', { id }, { withCredentials: true })
       .then((response) => {
         alert(response.data.message);
         reloadSellingBooks();
@@ -703,7 +705,7 @@ const MainPage = () => {
   const handleCancelRequest = (id) => {
     if (!window.confirm('Are you sure you want to cancel this request?')) return;
 
-    axios.post('http://localhost:5000/sell-books/cancel-request', { id }, { withCredentials: true })
+    axios.post(`${API_URL}/sell-books/cancel-request', { id }, { withCredentials: true })
       .then((response) => {
         alert(response.data.message);
         reloadSellingBooks();
@@ -718,7 +720,7 @@ const MainPage = () => {
   const handleMarkSold = (id) => {
     if (!window.confirm('Mark this book as sold to the current buyer?')) return;
 
-    axios.post('http://localhost:5000/sell-books/mark-sold', { id }, { withCredentials: true })
+    axios.post(`${API_URL}/sell-books/mark-sold', { id }, { withCredentials: true })
       .then((response) => {
         alert(response.data.message);
         reloadSellingBooks();
@@ -732,7 +734,7 @@ const MainPage = () => {
   const handleConfirmReceive = (id) => {
     if (!window.confirm('Confirm that you have received this book?')) return;
 
-    axios.post('http://localhost:5000/sell-books/confirm-receive', { id }, { withCredentials: true })
+    axios.post(`${API_URL}/sell-books/confirm-receive', { id }, { withCredentials: true })
       .then((response) => {
         alert(response.data.message);
         reloadSellingBooks();
@@ -745,12 +747,12 @@ const MainPage = () => {
   };
 
   const reloadSellingBooks = () => {
-    axios.get('http://localhost:5000/sell-books', { withCredentials: true })
+    axios.get(`${API_URL}/sell-books', { withCredentials: true })
       .then(res => setSellingBooks(res.data));
   };
 
   const reloadRequestedBooks = () => {
-    axios.get('http://localhost:5000/sell-books/my-requests', { withCredentials: true })
+    axios.get(`${API_URL}/sell-books/my-requests', { withCredentials: true })
       .then(res => setRequestedBooks(res.data));
   };
 
@@ -766,14 +768,14 @@ const MainPage = () => {
   };
 
   const handleReturn = (bookId) => {
-    axios.post('http://localhost:5000/return-book', { book_id: bookId }, { withCredentials: true })
+    axios.post(`${API_URL}/return-book', { book_id: bookId }, { withCredentials: true })
       .then(res => {
         alert(res.data.message);
         if (activeTab === 'borrowed') {
-          axios.get('http://localhost:5000/borrowed-books', { withCredentials: true })
+          axios.get(`${API_URL}/borrowed-books', { withCredentials: true })
             .then(res => setBorrowedBooks(res.data));
         }
-        axios.get('http://localhost:5000/books')
+        axios.get(`${API_URL}/books')
           .then(res => setAvailableBooks(res.data));
       })
       .catch(err => {
@@ -796,7 +798,7 @@ const MainPage = () => {
     const formData = new FormData();
     formData.append('profileImage', file);
     setIsUploadingImage(true);
-    axios.post('http://localhost:5000/api/user/upload-profile-image', formData, {
+    axios.post(`${API_URL}/api/user/upload-profile-image', formData, {
       withCredentials: true,
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -819,7 +821,7 @@ const MainPage = () => {
     if (!window.confirm('Are you sure you want to remove your profile picture?')) {
       return;
     }
-    axios.delete('http://localhost:5000/api/user/remove-profile-image', { withCredentials: true })
+    axios.delete(`${API_URL}/api/user/remove-profile-image', { withCredentials: true })
       .then(() => {
         setProfileImage(null);
         alert('Profile image removed successfully!');
@@ -951,7 +953,7 @@ const MainPage = () => {
                 contact: formData.get('contact'),
                 status: 'available'
               };
-              axios.post('http://localhost:5000/sell-book', data, { withCredentials: true })
+              axios.post(`${API_URL}/sell-book', data, { withCredentials: true })
                 .then(() => {
                   setSellStatusMessage('✅ Book is Available for selling.');
                   e.target.reset();
@@ -1276,7 +1278,7 @@ const MainPage = () => {
           <button
             className="nav-item logout-btn"
             onClick={() => {
-              axios.post('http://localhost:5000/api/user/logout', {}, { withCredentials: true })
+              axios.post(`${API_URL}/api/user/logout', {}, { withCredentials: true })
                 .then(() => navigate('/login'))
                 .catch(() => navigate('/login'));
             }}
