@@ -6,9 +6,12 @@ import "./Register.css";
 
 function Register() {
   const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
     username: '',
-    password: '',
-    usn: ''
+    email: '',
+    usn: '',
+    password: ''
   });
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -28,9 +31,12 @@ function Register() {
     }
 
     axios.post(`${import.meta.env.VITE_API_URL}/register`, {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
       username: formData.username,
-      password: formData.password,
-      usn: formData.usn
+      email: formData.email,
+      usn: formData.usn,
+      password: formData.password
     }, {
       withCredentials: true
     })
@@ -38,15 +44,19 @@ function Register() {
       console.log(response);
       setSuccess(true);
       setFormData({
+        firstName: '',
+        lastName: '',
         username: '',
-        password: '',
-        usn: ''
+        email: '',
+        usn: '',
+        password: ''
       });
       setAcceptTerms(false);
     })
     .catch((error) => {
       console.error("Error registering:", error);
-      alert("Registration failed.");
+      const errorMessage = error.response?.data?.message || "Registration failed.";
+      alert(errorMessage);
     });
   };
 
@@ -66,10 +76,58 @@ function Register() {
             <div className="input-group">
               <input
                 type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                placeholder="First Name"
+                required
+                autoComplete="given-name"
+              />
+            </div>
+
+            <div className="input-group">
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                placeholder="Last Name"
+                required
+                autoComplete="family-name"
+              />
+            </div>
+
+            <div className="input-group">
+              <input
+                type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleInputChange}
                 placeholder="Username"
+                required
+                autoComplete="username"
+              />
+            </div>
+
+            <div className="input-group">
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                placeholder="Email"
+                required
+                autoComplete="email"
+              />
+            </div>
+
+            <div className="input-group">
+              <input
+                type="text"
+                name="usn"
+                value={formData.usn}
+                onChange={handleInputChange}
+                placeholder="USN (University Seat Number)"
                 required
                 autoComplete="off"
               />
@@ -83,19 +141,7 @@ function Register() {
                 onChange={handleInputChange}
                 placeholder="Password"
                 required
-                autoComplete="off"
-              />
-            </div>
-
-            <div className="input-group">
-              <input
-                type="text"
-                name="usn"
-                value={formData.usn}
-                onChange={handleInputChange}
-                placeholder="USN"
-                required
-                autoComplete="off"
+                autoComplete="new-password"
               />
             </div>
 
