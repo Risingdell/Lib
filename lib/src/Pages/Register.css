@@ -382,16 +382,21 @@
   padding: 40px;
   color: white;
   animation: fadeInUp 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
 }
 
 .success-message p {
   font-size: 24px;
   font-weight: 700;
-  margin: 0 0 25px 0;
+  margin: 0;
   background: linear-gradient(135deg, #10b981, #34d399);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  order: 2;
 }
 
 .success-message .login-link {
@@ -403,10 +408,11 @@
   text-decoration: none;
   font-weight: 700;
   transition: all 0.3s ease;
-  margin-top: 10px;
+  margin: 0;
   box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  order: 1;
 }
 
 .success-message .login-link:hover {

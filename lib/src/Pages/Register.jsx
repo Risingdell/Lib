@@ -68,8 +68,8 @@ function Register() {
 
         {success ? (
           <div className="success-message">
-            <p>User Registered Successfully!</p>
             <Link to="/login" className="login-link">Go to Login</Link>
+            <p>User Registered Successfully!</p>
           </div>
         ) : (
           <form className="register-form" onSubmit={(e) => { e.preventDefault(); register(); }}>
