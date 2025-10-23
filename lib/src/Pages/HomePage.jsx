@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import ThreeBackground from '../Components/ThreeBackground';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -21,35 +22,37 @@ const HomePage = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #000000 0%, #0d3b66 100%);
+          position: relative;
         }
         .home-card {
-          background: rgba(13, 59, 102, 0.15);
+          background: rgba(30, 41, 59, 0.7);
           padding: 3rem 2.5rem;
           border-radius: 22px;
-          box-shadow: 0 8px 32px rgba(0, 191, 255, 0.15), 0 2px 8px rgba(0, 191, 255, 0.1);
+          box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15), 0 2px 8px rgba(59, 130, 246, 0.1);
           backdrop-filter: blur(10px);
+          border: 1px solid rgba(59, 130, 246, 0.3);
           min-width: 340px;
           max-width: 95vw;
           display: flex;
           flex-direction: column;
           align-items: center;
           animation: fadeInUp 1.2s cubic-bezier(0.4,0,0.2,1);
+          position: relative;
+          z-index: 1;
         }
         .home-card h1 {
           font-size: 2.4rem;
           font-weight: 700;
-          color: #aee6ff;
+          color: #ffffff;
           margin-bottom: 0.7rem;
           letter-spacing: 1px;
-          text-shadow: 0 2px 8px rgba(0,191,255,0.2);
+          text-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
         }
         .home-card p {
           font-size: 1.15rem;
-          color: #d0f0ff;
+          color: #94a3b8;
           margin-bottom: 2.2rem;
           text-align: center;
-          text-shadow: 0 1px 4px rgba(0,191,255,0.15);
         }
         .home-btn-group {
           display: flex;
@@ -65,8 +68,8 @@ const HomePage = () => {
           font-size: 1.1rem;
           font-weight: 600;
           color: #fff;
-          background: linear-gradient(135deg, #00bfff, #1e90ff);
-          box-shadow: 0 4px 16px rgba(0,191,255,0.25);
+          background: #3b82f6;
+          box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
           cursor: pointer;
           transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
           display: flex;
@@ -74,14 +77,14 @@ const HomePage = () => {
           gap: 12px;
         }
         .home-btn.student {
-          background: linear-gradient(135deg, #00bfff, #1e90ff);
+          background: #3b82f6;
         }
         .home-btn.admin {
-          background: linear-gradient(135deg, #0077b6, #00b4d8);
+          background: #2563eb;
         }
         .home-btn:hover, .home-btn:focus {
           transform: translateY(-3px) scale(1.03);
-          box-shadow: 0 8px 24px rgba(0,191,255,0.3);
+          box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
           outline: none;
         }
         .home-btn .btn-icon {
@@ -111,6 +114,7 @@ const HomePage = () => {
           }
         }
       `}</style>
+      <ThreeBackground />
       <div className="home-center-card">
         <div className="home-card">
           <h1>Welcome to the AI & DS Library</h1>
