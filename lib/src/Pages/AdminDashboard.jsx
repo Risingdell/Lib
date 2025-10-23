@@ -13,6 +13,7 @@ const AdminDashboard = () => {
   const [borrowedBooks, setBorrowedBooks] = useState([]);
   const [pendingReturns, setPendingReturns] = useState([]);
   const [borrowingHistory, setBorrowingHistory] = useState([]);
+  const [pendingUsers, setPendingUsers] = useState([]);
   const initialFormState = {
     acc_no: '',
     author: '',
@@ -56,7 +57,7 @@ const AdminDashboard = () => {
     fetchAdmin();
   }, []);
 
-  // Fetch borrowed, expired books, pending returns, or history based on tab
+  // Fetch borrowed, expired books, pending returns, history, or pending users based on tab
   useEffect(() => {
     const fetchBorrowedBooks = async () => {
       try {
@@ -73,13 +74,16 @@ const AdminDashboard = () => {
         } else if (activeTab === 'history') {
           res = await axios.get(`${API_URL}/api/admin/borrowing-history`, { withCredentials: true });
           if (res) setBorrowingHistory(res.data);
+        } else if (activeTab === 'registration-requests') {
+          res = await axios.get(`${API_URL}/api/admin/pending-users`, { withCredentials: true });
+          if (res) setPendingUsers(res.data);
         }
       } catch (err) {
-        console.error('Failed to fetch books:', err.response?.data?.message || err.message);
+        console.error('Failed to fetch data:', err.response?.data?.message || err.message);
       }
     };
 
-    if (activeTab === 'borrowed' || activeTab === 'expired' || activeTab === 'pending-returns' || activeTab === 'history') {
+    if (activeTab === 'borrowed' || activeTab === 'expired' || activeTab === 'pending-returns' || activeTab === 'history' || activeTab === 'registration-requests') {
       fetchBorrowedBooks();
     }
   }, [activeTab]);
@@ -161,6 +165,48 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleApproveUser = async (userId) => {
+    if (!window.confirm('Are you sure you want to approve this user registration?')) return;
+
+    try {
+      const res = await axios.post(
+        `${API_URL}/api/admin/approve-user`,
+        { user_id: userId },
+        { withCredentials: true }
+      );
+      alert(res.data.message);
+      // Refresh pending users list
+      const updatedRes = await axios.get(`${API_URL}/api/admin/pending-users`, { withCredentials: true });
+      setPendingUsers(updatedRes.data);
+    } catch (err) {
+      console.error('Approve failed:', err);
+      alert('Error: ' + (err.response?.data?.message || 'Failed to approve user'));
+    }
+  };
+
+  const handleRejectUser = async (userId) => {
+    const reason = prompt('Enter rejection reason:');
+    if (!reason || reason.trim() === '') {
+      alert('Rejection reason is required');
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        `${API_URL}/api/admin/reject-user`,
+        { user_id: userId, reason: reason.trim() },
+        { withCredentials: true }
+      );
+      alert(res.data.message);
+      // Refresh pending users list
+      const updatedRes = await axios.get(`${API_URL}/api/admin/pending-users`, { withCredentials: true });
+      setPendingUsers(updatedRes.data);
+    } catch (err) {
+      console.error('Reject failed:', err);
+      alert('Error: ' + (err.response?.data?.message || 'Failed to reject user'));
+    }
+  };
+
   if (loading) {
     return <BookLoader message="Loading admin dashboard..." />;
   }
@@ -198,6 +244,10 @@ const AdminDashboard = () => {
             <span className="nav-icon">👤</span>
             <span className="nav-text">Profile</span>
           </button>
+          <button className={`nav-item${activeTab === 'registration-requests' ? ' active' : ''}`} onClick={() => handleTabChange('registration-requests')}>
+            <span className="nav-icon">👥</span>
+            <span className="nav-text">Registration Requests</span>
+          </button>
           <button className={`nav-item${activeTab === 'borrowed' ? ' active' : ''}`} onClick={() => handleTabChange('borrowed')}>
             <span className="nav-icon">📖</span>
             <span className="nav-text">Borrowed Books</span>
@@ -233,6 +283,7 @@ const AdminDashboard = () => {
           </button>
           <h1 className="page-title">
             {activeTab === 'profile' && 'Admin Profile'}
+            {activeTab === 'registration-requests' && 'Registration Requests'}
             {activeTab === 'borrowed' && 'Borrowed Books'}
             {activeTab === 'expired' && 'Expired Books'}
             {activeTab === 'pending-returns' && 'Pending Returns'}
@@ -287,6 +338,60 @@ const AdminDashboard = () => {
                   </p>
                 </div>
               </div>
+            </div>
+          )}
+          {activeTab === 'registration-requests' && (
+            <div className="dashboard-content">
+              <h2 className="section-title">Registration Requests ({pendingUsers.length})</h2>
+              {pendingUsers.length === 0 ? (
+                <p>No pending registration requests.</p>
+              ) : (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>User ID</th>
+                      <th>Name</th>
+                      <th>Username</th>
+                      <th>USN</th>
+                      <th>Email</th>
+                      <th>Registered On</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pendingUsers.map((user) => (
+                      <tr key={user.id}>
+                        <td>{user.id}</td>
+                        <td>{user.firstName} {user.lastName}</td>
+                        <td>{user.username}</td>
+                        <td>{user.usn}</td>
+                        <td>{user.email}</td>
+                        <td>{new Date(user.registered_at).toLocaleDateString()}</td>
+                        <td>
+                          <span className="status-badge status-pending">
+                            {user.approval_status}
+                          </span>
+                        </td>
+                        <td>
+                          <button
+                            className="approve-btn"
+                            onClick={() => handleApproveUser(user.id)}
+                          >
+                            ✅ Approve
+                          </button>
+                          <button
+                            className="reject-btn"
+                            onClick={() => handleRejectUser(user.id)}
+                          >
+                            ❌ Reject
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           )}
           {activeTab === 'borrowed' && (
