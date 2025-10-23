@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MainPage.css';
 import axios from 'axios';
-import BookLoader from '../components/BookLoader';
+import BookLoader from '../Components/BookLoader';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './AdminDashboard.css';
-import BookLoader from '../components/BookLoader';
+import BookLoader from '../Components/BookLoader';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
