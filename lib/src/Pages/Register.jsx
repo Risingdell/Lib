@@ -145,7 +145,7 @@ function Register() {
               />
             </div>
 
-            <div className="terms-group">
+            {/* <div className="terms-group">
               <label className="terms-label">
                 <input
                   type="checkbox"
@@ -155,6 +155,9 @@ function Register() {
                 />
                 <span>I accept the Terms of Use & Privacy Policy</span>
               </label>
+            </div> */}
+            <div className="login-prompt">
+              Already have an account? <Link to="/login" className="login-link">Sign In</Link>
             </div>
 
             <button type="submit" className="register-button">
