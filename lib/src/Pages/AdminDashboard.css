@@ -19,7 +19,7 @@ html, body, #root {
   position: relative;
 }
 
-/* User Sidebar Styles - Same as MainPage */
+/* User Sidebar Styles */
 .user-sidebar {
   --sidebar-width: 280px;
   width: var(--sidebar-width);
@@ -175,7 +175,7 @@ html, body, #root {
   transform: translateY(0) scale(1.02);
 }
 
-/* Admin Profile Section (replaces user avatar) */
+/* Admin Profile Section */
 .admin-profile {
   padding: 60px 20px 40px;
   text-align: center;
@@ -385,7 +385,6 @@ html, body, #root {
   transform: translateY(-2px) scale(1.03) !important;
   transition: all 0.3s ease-in-out !important;
   backdrop-filter: blur(8px);
-  transform: none;
 }
 
 /* Main Content Area */
@@ -405,71 +404,89 @@ html, body, #root {
   overflow-y: auto;
 }
 
+/* Enhanced Table Styles for Pending Returns */
 .dashboard-content {
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  margin-bottom: 30px;
+  border: 2px solid #1a1a1a;
 }
 
 .section-title {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 700;
-  color: #2d3748;
+  color: #1a1a1a;
   margin: 0 0 30px;
   position: relative;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .section-title::after {
   content: '';
   position: absolute;
-  bottom: -10px;
+  bottom: -12px;
   left: 0;
-  width: 60px;
-  height: 4px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border-radius: 2px;
+  width: 80px;
+  height: 5px;
+  background: linear-gradient(90deg, #1a1a1a, #4a4a4a);
+  border-radius: 3px;
 }
 
 /* Table Styles */
 table {
   width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 8px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #ffffff;
+  border-radius: 12px;
   overflow: hidden;
-  margin-top: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-top: 25px;
+  border: 2px solid #1a1a1a;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 thead {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, #2d2d2d, #1a1a1a);
 }
 
 th {
-  padding: 14px 16px;
+  padding: 16px 20px;
   text-align: left;
   font-weight: 600;
-  font-size: 14px;
-  color: white;
+  font-size: 15px;
+  color: #ffffff;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+th:last-child {
+  border-right: none;
 }
 
 td {
-  padding: 14px 16px;
-  border-bottom: 1px solid #e2e8f0;
-  color: #4a5568;
+  padding: 16px 20px;
+  border-bottom: 1px solid #1a1a1a;
+  border-right: 1px solid #1a1a1a;
+  color: #2d3748;
   font-size: 14px;
+  background: #fafafa;
 }
 
-tbody tr:hover {
-  background: #f7fafc;
+td:last-child {
+  border-right: none;
 }
 
 tbody tr:last-child td {
   border-bottom: none;
+}
+
+tbody tr:hover {
+  background: #f0f4f8;
+  transition: background 0.2s ease;
 }
 
 /* Form Styles */
@@ -533,46 +550,54 @@ button[type="submit"]:hover, .submit-btn:hover {
 
 /* Action Buttons */
 .approve-btn, .reject-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
+  padding: 10px 20px;
+  border: 2px solid #1a1a1a;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .approve-btn {
-  background: #10b981;
-  color: white;
-  margin-right: 8px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #ffffff;
+  margin-right: 12px;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
 }
 
 .approve-btn:hover {
-  background: #059669;
+  background: linear-gradient(135deg, #16a34a, #15803d);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+  border-color: #ffffff;
 }
 
 .reject-btn {
-  background: #ef4444;
-  color: white;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 .reject-btn:hover {
-  background: #dc2626;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+  border-color: #ffffff;
 }
 
 /* Empty State */
 .dashboard-content p {
-  color: #718096;
+  color: #6b7280;
   font-size: 16px;
-  margin: 20px 0;
+  margin: 30px 0;
+  text-align: center;
+  font-style: italic;
 }
 
 /* Sidebar Overlay for Mobile */
@@ -684,7 +709,7 @@ button[type="submit"]:hover, .submit-btn:hover {
   }
 }
 
-/* Mobile Header - Similar to MainPage */
+/* Mobile Header */
 .mobile-header {
   display: none;
   align-items: center;
