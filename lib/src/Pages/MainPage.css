@@ -726,9 +726,13 @@ html, body, #root {
     top: 0;
     left: 0;
     height: 100vh;
+    height: 100dvh; /* Use dynamic viewport height for mobile browsers */
+    max-height: -webkit-fill-available;
     z-index: 1001;
     transform: translateX(calc(-1 * var(--sidebar-width)));
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
   }
   .user-sidebar:not(.collapsed) {
     transform: translateX(0);
@@ -767,6 +771,11 @@ html, body, #root {
   .sell-form {
     padding: 24px;
     margin: 0;
+    margin-bottom: 40px; /* Extra space at bottom for mobile */
+  }
+  .content-area {
+    padding: 20px;
+    padding-bottom: 60px; /* Ensure bottom content is visible */
   }
 }
 @media (max-width: 480px) {
@@ -775,6 +784,11 @@ html, body, #root {
   }
   .content-area {
     padding: 16px;
+    padding-bottom: 80px; /* Extra padding for very small screens */
+  }
+  .sell-form {
+    padding: 20px;
+    margin-bottom: 60px;
   }
   .books-grid {
     gap: 12px;
