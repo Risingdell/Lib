@@ -429,57 +429,113 @@
   pointer-events: none;
 }
 
-/* Mobile responsiveness */
+/* Mobile responsiveness - Enhanced for better mobile experience */
 @media (max-width: 480px) {
   .register-container {
-    padding: 16px;
+    padding: 12px;
+    min-height: 100vh;
+    height: auto;
   }
 
   .register-card {
-    padding: 35px 25px;
+    padding: 30px 20px;
     border-radius: 20px;
-    margin: 10px auto;
+    margin: 0 auto;
+    max-width: 100%;
+    width: calc(100% - 24px);
   }
 
   .register-title {
-    font-size: 32px;
+    font-size: 28px;
     margin-bottom: 8px;
   }
 
   .register-subtitle {
-    font-size: 14px;
+    font-size: 13px;
     margin-bottom: 25px;
+  }
+
+  .register-form {
+    gap: 16px;
   }
 
   .name-row {
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
   }
 
   .input-group input {
-    padding: 13px 16px;
-    font-size: 15px;
+    padding: 12px 14px;
+    font-size: 14px;
+    border-radius: 10px;
   }
 
   .register-button {
-    padding: 15px 35px;
-    font-size: 15px;
+    padding: 14px 30px;
+    font-size: 14px;
   }
 
   .terms-label {
+    font-size: 12px;
+    gap: 10px;
+  }
+
+  .terms-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+  }
+
+  .login-prompt {
+    font-size: 13px;
+    margin-top: 20px;
+  }
+}
+
+/* Small Mobile devices */
+@media (max-width: 360px) {
+  .register-card {
+    padding: 25px 16px;
+  }
+
+  .register-title {
+    font-size: 24px;
+  }
+
+  .register-subtitle {
+    font-size: 12px;
+  }
+
+  .input-group input {
+    padding: 11px 13px;
     font-size: 13px;
   }
 }
 
 /* Tablet responsiveness */
 @media (min-width: 481px) and (max-width: 768px) {
+  .register-container {
+    padding: 30px 20px;
+  }
+
   .register-card {
     max-width: 480px;
     padding: 40px 35px;
+    width: 100%;
   }
 
   .register-title {
     font-size: 36px;
+  }
+
+  .input-group input {
+    font-size: 15px;
+  }
+}
+
+/* Large tablets and small desktops */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .register-card {
+    max-width: 540px;
   }
 }
 
