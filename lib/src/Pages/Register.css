@@ -2,16 +2,17 @@
 
 .register-container {
   min-height: 100vh;
-  height: 100%;
+  width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1419 100%);
-  padding: 40px 20px;
+  padding: 60px 20px;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Animated gradient orbs in background */
@@ -61,7 +62,7 @@
   padding: 45px 40px;
   width: 100%;
   max-width: 520px;
-  margin: 20px auto;
+  margin: 0 auto;
   position: relative;
   z-index: 2;
   box-shadow:
@@ -71,6 +72,7 @@
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: visible;
   pointer-events: auto;
+  box-sizing: border-box;
 }
 
 /* Glowing border effect */
@@ -432,37 +434,38 @@
 /* Mobile responsiveness - Enhanced for better mobile experience */
 @media (max-width: 480px) {
   .register-container {
-    padding: 20px 12px;
+    padding: 30px 15px;
     min-height: 100vh;
-    height: auto;
     align-items: flex-start;
+    justify-content: flex-start;
   }
 
   .register-card {
-    padding: 30px 20px;
+    padding: 30px 20px 40px 20px;
     border-radius: 20px;
-    margin: 10px auto 20px auto;
+    margin: 0 auto;
     max-width: 100%;
-    width: calc(100% - 24px);
+    width: 100%;
+    min-height: auto;
   }
 
   .register-title {
-    font-size: 28px;
+    font-size: 26px;
     margin-bottom: 8px;
   }
 
   .register-subtitle {
     font-size: 13px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
   }
 
   .register-form {
-    gap: 16px;
+    gap: 14px;
   }
 
   .name-row {
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
   }
 
   .input-group input {
@@ -474,6 +477,7 @@
   .register-button {
     padding: 14px 30px;
     font-size: 14px;
+    margin-top: 5px;
   }
 
   .terms-label {
@@ -488,8 +492,8 @@
 
   .login-prompt {
     font-size: 13px;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    margin-top: 15px;
+    margin-bottom: 0;
   }
 
   .success-message {
@@ -499,20 +503,34 @@
 
 /* Small Mobile devices */
 @media (max-width: 360px) {
+  .register-container {
+    padding: 20px 10px;
+  }
+
   .register-card {
-    padding: 25px 16px;
+    padding: 25px 16px 35px 16px;
   }
 
   .register-title {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .register-subtitle {
     font-size: 12px;
+    margin-bottom: 18px;
+  }
+
+  .register-form {
+    gap: 12px;
   }
 
   .input-group input {
     padding: 11px 13px;
+    font-size: 13px;
+  }
+
+  .register-button {
+    padding: 13px 25px;
     font-size: 13px;
   }
 }
@@ -619,21 +637,29 @@
 }
 
 /* Ensure proper scrolling on all devices */
+* {
+  box-sizing: border-box;
+}
+
 body, html {
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  overflow-y: auto;
 }
 
 .register-container {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Additional mobile fix for full visibility */
+/* Prevent iOS zoom on input focus */
 @media (max-width: 480px) {
-  body {
-    overflow-y: auto;
-  }
-
-  .register-container {
-    padding-bottom: 40px;
+  input, textarea, select {
+    font-size: 16px !important;
   }
 }
