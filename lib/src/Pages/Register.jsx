@@ -14,18 +14,52 @@ function Register() {
   });
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [usnError, setUsnError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+
+    // Real-time USN validation
+    if (name === 'usn') {
+      const usnPattern = /^[1-4]SN\d{2}AD\d{3}$/;
+      const upperValue = value.toUpperCase();
+
+      setFormData(prev => ({
+        ...prev,
+        [name]: upperValue
+      }));
+
+      if (value && !usnPattern.test(upperValue)) {
+        setUsnError('USN format: 4SN23AD000 (e.g., 1SN23AD001)');
+      } else if (value && !upperValue.includes('AD')) {
+        setUsnError('Only students with AD department code can register');
+      } else {
+        setUsnError('');
+      }
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const register = () => {
     if (!acceptTerms) {
       alert("Please accept the Terms of Use & Privacy Policy.");
+      return;
+    }
+
+    // Validate USN before submitting
+    const usnPattern = /^[1-4]SN\d{2}AD\d{3}$/;
+    if (!usnPattern.test(formData.usn)) {
+      alert("Invalid USN format. USN must follow the pattern: 4SN23AD000 (Example: 1SN23AD001, 4SN23AD999)");
+      return;
+    }
+
+    if (!formData.usn.includes('AD')) {
+      alert("Invalid USN. Only students with 'AD' department code can register.");
       return;
     }
 
@@ -42,6 +76,7 @@ function Register() {
     .then((response) => {
       console.log(response);
       setSuccess(true);
+      setSuccessMessage(response.data.message || "Registration successful! Please wait approximately 2 hours for admin approval.");
       setFormData({
         firstName: '',
         lastName: '',
@@ -51,6 +86,7 @@ function Register() {
         password: ''
       });
       setAcceptTerms(false);
+      setUsnError('');
     })
     .catch((error) => {
       console.error("Error registering:", error);
@@ -67,8 +103,14 @@ function Register() {
 
         {success ? (
           <div className="success-message">
-            <Link to="/login" className="login-link">Go to Login</Link>
-            <p>User Registered Successfully!</p>
+            <div className="success-icon">✓</div>
+            <h3>Registration Successful!</h3>
+            <p className="success-text">{successMessage}</p>
+            <div className="waiting-info">
+              <p className="wait-time">⏰ Estimated Approval Time: <strong>2 hours</strong></p>
+              <p className="info-text">You will receive an email notification once your account is approved. After approval, you can login with your credentials.</p>
+            </div>
+            <Link to="/login" className="login-link-button">Go to Login Page</Link>
           </div>
         ) : (
           <form className="register-form" onSubmit={(e) => { e.preventDefault(); register(); }}>
@@ -127,10 +169,14 @@ function Register() {
                 name="usn"
                 value={formData.usn}
                 onChange={handleInputChange}
-                placeholder="USN (University Seat Number)"
+                placeholder="USN (Format: 4SN23AD000)"
                 required
                 autoComplete="off"
+                maxLength="10"
+                style={{ borderColor: usnError ? '#ef4444' : '' }}
               />
+              {usnError && <span className="error-text">{usnError}</span>}
+              {formData.usn && !usnError && <span className="success-text-inline">✓ Valid USN format</span>}
             </div>
 
             <div className="input-group">
