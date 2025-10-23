@@ -63,7 +63,7 @@ function Register() {
     <div className="register-container">
       <div className="register-card">
         <h2 className="register-title">Create Account</h2>
-        <p className="register-subtitle">Join our library community today</p>
+
 
         {success ? (
           <div className="success-message">
