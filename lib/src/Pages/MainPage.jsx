@@ -17,6 +17,7 @@ const MainPage = () => {
   const [activeTab, setActiveTab] = useState('books');
   const [profileImage, setProfileImage] = useState(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [borrowingBookId, setBorrowingBookId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -85,6 +86,11 @@ const MainPage = () => {
   }, []);
 
   const handleBorrow = (bookId) => {
+    if (borrowingBookId === bookId) {
+      return; // Prevent duplicate requests for the same book
+    }
+
+    setBorrowingBookId(bookId);
     const url = API_URL + '/borrow';
     axios.post(url, { book_id: bookId }, { withCredentials: true })
       .then(res => {
@@ -98,6 +104,9 @@ const MainPage = () => {
       .catch(err => {
         console.error('Borrow failed', err);
         alert('Failed to borrow book');
+      })
+      .finally(() => {
+        setBorrowingBookId(null);
       });
   };
 
@@ -274,7 +283,13 @@ const MainPage = () => {
                     </div>
                     {book.donated_by && <p className="book-remarks">Donated by: {book.donated_by}</p>}
                   </div>
-                  <button className="borrow-btn" onClick={() => handleBorrow(book.id)}>Borrow Book</button>
+                  <button
+                    className="borrow-btn"
+                    onClick={() => handleBorrow(book.id)}
+                    disabled={borrowingBookId === book.id}
+                  >
+                    {borrowingBookId === book.id ? 'Borrowing...' : 'Borrow Book'}
+                  </button>
                 </div>
               ))}
             </div>
