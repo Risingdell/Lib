@@ -7,6 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const AdminDashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [admin, setAdmin] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('profile');
   const [borrowedBooks, setBorrowedBooks] = useState([]);
   const [pendingReturns, setPendingReturns] = useState([]);
@@ -31,9 +32,15 @@ const AdminDashboard = () => {
         } else {
           console.error('Admin data format unexpected:', res.data);
           setAdmin(null);
+          // Redirect to login if no valid admin data
+          window.location.href = '/admin-login';
         }
       } catch (err) {
         console.error('Failed to fetch admin profile:', err.response?.data?.message || err.message);
+        // Redirect to login on error
+        window.location.href = '/admin-login';
+      } finally {
+        setLoading(false);
       }
     };
     fetchAdmin();
@@ -141,13 +148,28 @@ const AdminDashboard = () => {
     }
   };
 
-  if (!admin) {
+  if (loading) {
     return (
-      <div className="admin-dashboard">
-        <p>No admin data found. Please log in.</p>
-        <button onClick={handleLogout}>Back to Login</button>
+      <div className="admin-dashboard" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div className="spinner" style={{
+            border: '4px solid #f3f3f3',
+            borderTop: '4px solid #667eea',
+            borderRadius: '50%',
+            width: '40px',
+            height: '40px',
+            animation: 'spin 1s linear infinite',
+            margin: '0 auto 16px'
+          }}></div>
+          <p>Loading admin dashboard...</p>
+        </div>
       </div>
     );
+  }
+
+  if (!admin) {
+    // This should never be reached as we redirect in useEffect
+    return null;
   }
 
   return (
