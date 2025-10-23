@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './AdminDashboard.css';
+import BookLoader from '../components/BookLoader';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -25,8 +26,15 @@ const AdminDashboard = () => {
   // Fetch admin on load
   useEffect(() => {
     const fetchAdmin = async () => {
+      // Minimum 5 seconds loading time for book animation
+      const minLoadingTime = new Promise(resolve => setTimeout(resolve, 5000));
+
       try {
-        const res = await axios.get(`${API_URL}/api/admin/me`, { withCredentials: true });
+        const [res] = await Promise.all([
+          axios.get(`${API_URL}/api/admin/me`, { withCredentials: true }),
+          minLoadingTime
+        ]);
+
         if (res.data && res.data.id) {
           setAdmin(res.data);
         } else {
@@ -37,7 +45,8 @@ const AdminDashboard = () => {
         }
       } catch (err) {
         console.error('Failed to fetch admin profile:', err.response?.data?.message || err.message);
-        // Redirect to login on error
+        // Wait for animation to complete before redirecting
+        await minLoadingTime;
         window.location.href = '/admin-login';
       } finally {
         setLoading(false);
@@ -149,22 +158,7 @@ const AdminDashboard = () => {
   };
 
   if (loading) {
-    return (
-      <div className="admin-dashboard" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div className="spinner" style={{
-            border: '4px solid #f3f3f3',
-            borderTop: '4px solid #667eea',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            animation: 'spin 1s linear infinite',
-            margin: '0 auto 16px'
-          }}></div>
-          <p>Loading admin dashboard...</p>
-        </div>
-      </div>
-    );
+    return <BookLoader message="Loading admin dashboard..." />;
   }
 
   if (!admin) {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MainPage.css';
 import axios from 'axios';
+import BookLoader from '../components/BookLoader';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -13,6 +14,7 @@ const MainPage = () => {
   const [sellingBooks, setSellingBooks] = useState([]);
   const [requestedBooks, setRequestedBooks] = useState([]);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('books');
   const [profileImage, setProfileImage] = useState(null);
@@ -22,14 +24,25 @@ const MainPage = () => {
 
   useEffect(() => {
     const url = API_URL + '/api/user/profile';
-    axios.get(url, { withCredentials: true })
-      .then(response => {
+
+    // Minimum 4 seconds loading time for book animation
+    const minLoadingTime = new Promise(resolve => setTimeout(resolve, 4000));
+
+    Promise.all([
+      axios.get(url, { withCredentials: true }),
+      minLoadingTime
+    ])
+      .then(([response]) => {
         setUser(response.data);
         if (response.data.profileImage) {
           setProfileImage(response.data.profileImage);
         }
+        setLoading(false);
       })
-      .catch(() => navigate('/login'));
+      .catch(() => {
+        setLoading(false);
+        navigate('/login');
+      });
   }, [navigate]);
 
   useEffect(() => {
@@ -622,6 +635,10 @@ const MainPage = () => {
         return null;
     }
   };
+
+  if (loading) {
+    return <BookLoader message="Loading your library..." />;
+  }
 
   if (!user) return null;
 
