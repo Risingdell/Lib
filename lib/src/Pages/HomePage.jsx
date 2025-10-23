@@ -98,10 +98,18 @@ const HomePage = () => {
           z-index: 1;
         }
         .home-card h1 {
-          display: none;
+          font-size: 2.4rem;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 0.7rem;
+          letter-spacing: 1px;
+          text-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
         }
         .home-card p {
-          display: none;
+          font-size: 1.15rem;
+          color: #94a3b8;
+          margin-bottom: 2.2rem;
+          text-align: center;
         }
         .home-btn-group {
           display: flex;
@@ -123,6 +131,7 @@ const HomePage = () => {
           transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 12px;
         }
         .home-btn.student {
