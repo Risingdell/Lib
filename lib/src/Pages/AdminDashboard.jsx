@@ -91,6 +91,12 @@ const AdminDashboard = () => {
     window.location.href = '/admin-login';
   };
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    // Collapse sidebar on mobile after selecting a tab
+    setSidebarCollapsed(true);
+  };
+
   const handleApproveReturn = async (borrowId) => {
     if (!window.confirm('Are you sure you want to approve this book return?')) return;
 
@@ -166,23 +172,23 @@ const AdminDashboard = () => {
         </div>
 
         <nav className="sidebar-nav">
-          <button className={`nav-item${activeTab === 'profile' ? ' active' : ''}`} onClick={() => setActiveTab('profile')}>
+          <button className={`nav-item${activeTab === 'profile' ? ' active' : ''}`} onClick={() => handleTabChange('profile')}>
             <span className="nav-icon">👤</span>
             <span className="nav-text">Profile</span>
           </button>
-          <button className={`nav-item${activeTab === 'borrowed' ? ' active' : ''}`} onClick={() => setActiveTab('borrowed')}>
+          <button className={`nav-item${activeTab === 'borrowed' ? ' active' : ''}`} onClick={() => handleTabChange('borrowed')}>
             <span className="nav-icon">📖</span>
             <span className="nav-text">Borrowed Books</span>
           </button>
-          <button className={`nav-item${activeTab === 'expired' ? ' active' : ''}`} onClick={() => setActiveTab('expired')}>
+          <button className={`nav-item${activeTab === 'expired' ? ' active' : ''}`} onClick={() => handleTabChange('expired')}>
             <span className="nav-icon">⏰</span>
             <span className="nav-text">Expired Books</span>
           </button>
-          <button className={`nav-item${activeTab === 'pending-returns' ? ' active' : ''}`} onClick={() => setActiveTab('pending-returns')}>
+          <button className={`nav-item${activeTab === 'pending-returns' ? ' active' : ''}`} onClick={() => handleTabChange('pending-returns')}>
             <span className="nav-icon">⏳</span>
             <span className="nav-text">Pending Returns</span>
           </button>
-          <button className={`nav-item${activeTab === 'add' ? ' active' : ''}`} onClick={() => setActiveTab('add')}>
+          <button className={`nav-item${activeTab === 'add' ? ' active' : ''}`} onClick={() => handleTabChange('add')}>
             <span className="nav-icon">➕</span>
             <span className="nav-text">Add Books</span>
           </button>
