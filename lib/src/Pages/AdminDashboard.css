@@ -561,6 +561,7 @@ button[type="submit"]:hover, .submit-btn:hover {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 
 .approve-btn {
@@ -586,6 +587,64 @@ button[type="submit"]:hover, .submit-btn:hover {
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
+/* Actions Column Styling */
+td:has(.approve-btn), td:has(.reject-btn) {
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+  min-width: 180px;
+}
+
+/* Table Cell Alignment */
+td {
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Specific column widths for registration requests table */
+th:nth-child(1), td:nth-child(1) { /* User ID */
+  width: 60px;
+  text-align: center;
+}
+
+th:nth-child(2), td:nth-child(2) { /* Name */
+  width: 180px;
+  white-space: normal;
+  min-width: 150px;
+}
+
+th:nth-child(3), td:nth-child(3) { /* Username */
+  width: 120px;
+}
+
+th:nth-child(4), td:nth-child(4) { /* USN */
+  width: 120px;
+}
+
+th:nth-child(5), td:nth-child(5) { /* Email */
+  width: 220px;
+  white-space: normal;
+  min-width: 180px;
+}
+
+th:nth-child(6), td:nth-child(6) { /* Registered On */
+  width: 130px;
+  text-align: center;
+}
+
+th:nth-child(7), td:nth-child(7) { /* Status */
+  width: 110px;
+  text-align: center;
+}
+
+th:nth-child(8), td:nth-child(8) { /* Actions */
+  width: 200px;
+  text-align: center;
+  white-space: nowrap;
+}
+
 /* Status Badges */
 .status-badge {
   padding: 6px 12px;
@@ -607,14 +666,22 @@ button[type="submit"]:hover, .submit-btn:hover {
   color: #92400e;
 }
 
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+  text-transform: capitalize;
+}
+
 .status-approved {
   background: #d1fae5;
   color: #065f46;
+  text-transform: capitalize;
 }
 
 .status-rejected {
   background: #fee2e2;
   color: #991b1b;
+  text-transform: capitalize;
 }
 
 /* Empty State */
@@ -693,14 +760,21 @@ button[type="submit"]:hover, .submit-btn:hover {
 
   .content-area {
     padding: 20px;
+    overflow-x: auto;
   }
 
   table {
     font-size: 12px;
+    min-width: 800px;
   }
 
   th, td {
     padding: 10px 8px;
+  }
+
+  .approve-btn, .reject-btn {
+    padding: 6px 12px;
+    font-size: 12px;
   }
 
   .section-title {
