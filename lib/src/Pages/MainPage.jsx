@@ -267,8 +267,10 @@ const MainPage = () => {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    // Collapse sidebar on mobile after selecting a tab
-    setSidebarCollapsed(true);
+    // Collapse sidebar only on mobile (screen width <= 768px)
+    if (window.innerWidth <= 768) {
+      setSidebarCollapsed(true);
+    }
   };
 
   const renderContent = () => {
