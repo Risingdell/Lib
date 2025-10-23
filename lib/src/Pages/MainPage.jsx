@@ -265,6 +265,12 @@ const MainPage = () => {
       });
   };
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    // Collapse sidebar on mobile after selecting a tab
+    setSidebarCollapsed(true);
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'books':
@@ -667,42 +673,42 @@ const MainPage = () => {
         <nav className="sidebar-nav">
           <button
             className={'nav-item ' + (activeTab === 'books' ? 'active' : '')}
-            onClick={() => setActiveTab('books')}
+            onClick={() => handleTabChange('books')}
           >
             <span className="nav-icon">🏠</span>
             <span className="nav-text">Home</span>
           </button>
           <button
             className={'nav-item ' + (activeTab === 'borrowed' ? 'active' : '')}
-            onClick={() => setActiveTab('borrowed')}
+            onClick={() => handleTabChange('borrowed')}
           >
             <span className="nav-icon">📖</span>
             <span className="nav-text">My Books</span>
           </button>
           <button
             className={'nav-item ' + (activeTab === 'history' ? 'active' : '')}
-            onClick={() => setActiveTab('history')}
+            onClick={() => handleTabChange('history')}
           >
             <span className="nav-icon">📋</span>
             <span className="nav-text">History</span>
           </button>
           <button
             className={'nav-item ' + (activeTab === 'sell' ? 'active' : '')}
-            onClick={() => setActiveTab('sell')}
+            onClick={() => handleTabChange('sell')}
           >
             <span className="nav-icon">💼</span>
             <span className="nav-text">Sell Book</span>
           </button>
           <button
             className={'nav-item ' + (activeTab === 'view-sell' ? 'active' : '')}
-            onClick={() => setActiveTab('view-sell')}
+            onClick={() => handleTabChange('view-sell')}
           >
             <span className="nav-icon">🛒</span>
             <span className="nav-text">Marketplace</span>
           </button>
           <button
             className={'nav-item ' + (activeTab === 'requested-sell' ? 'active' : '')}
-            onClick={() => setActiveTab('requested-sell')}
+            onClick={() => handleTabChange('requested-sell')}
           >
             <span className="nav-icon">📥</span>
             <span className="nav-text">
