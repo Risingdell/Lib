@@ -68,7 +68,7 @@ function Register() {
 
         {success ? (
           <div className="success-message">
-            <Link to="/login" className="login-link">Go to Login</Link>
+            <Link to="/logout/" className="login-link">Go to Login</Link>
             <p>User Registered Successfully!</p>
           </div>
         ) : (
