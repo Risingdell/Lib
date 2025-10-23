@@ -202,9 +202,7 @@ function Register() {
                 <span>I accept the Terms of Use & Privacy Policy</span>
               </label>
             </div>
-            <div className="login-prompt">
-              Already have an account? <Link to="/login" className="login-link">Sign In</Link>
-            </div>
+
 
             <button type="submit" className="register-button">
               Register Now
