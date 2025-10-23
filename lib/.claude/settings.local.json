@@ -25,7 +25,8 @@
       "Bash(npm run build:*)",
       "Bash(git pull:*)",
       "Bash(node -e:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []
