@@ -586,6 +586,37 @@ button[type="submit"]:hover, .submit-btn:hover {
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
+/* Status Badges */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.status-active {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-pending_return {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-approved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 /* Empty State */
 .dashboard-content p {
   color: #718096;

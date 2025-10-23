@@ -12,6 +12,7 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [borrowedBooks, setBorrowedBooks] = useState([]);
   const [pendingReturns, setPendingReturns] = useState([]);
+  const [borrowingHistory, setBorrowingHistory] = useState([]);
   const initialFormState = {
     acc_no: '',
     author: '',
@@ -55,7 +56,7 @@ const AdminDashboard = () => {
     fetchAdmin();
   }, []);
 
-  // Fetch borrowed, expired books, or pending returns based on tab
+  // Fetch borrowed, expired books, pending returns, or history based on tab
   useEffect(() => {
     const fetchBorrowedBooks = async () => {
       try {
@@ -69,13 +70,16 @@ const AdminDashboard = () => {
         } else if (activeTab === 'pending-returns') {
           res = await axios.get(`${API_URL}/api/admin/pending-returns`, { withCredentials: true });
           if (res) setPendingReturns(res.data);
+        } else if (activeTab === 'history') {
+          res = await axios.get(`${API_URL}/api/admin/borrowing-history`, { withCredentials: true });
+          if (res) setBorrowingHistory(res.data);
         }
       } catch (err) {
         console.error('Failed to fetch books:', err.response?.data?.message || err.message);
       }
     };
 
-    if (activeTab === 'borrowed' || activeTab === 'expired' || activeTab === 'pending-returns') {
+    if (activeTab === 'borrowed' || activeTab === 'expired' || activeTab === 'pending-returns' || activeTab === 'history') {
       fetchBorrowedBooks();
     }
   }, [activeTab]);
@@ -206,6 +210,10 @@ const AdminDashboard = () => {
             <span className="nav-icon">⏳</span>
             <span className="nav-text">Pending Returns</span>
           </button>
+          <button className={`nav-item${activeTab === 'history' ? ' active' : ''}`} onClick={() => handleTabChange('history')}>
+            <span className="nav-icon">📚</span>
+            <span className="nav-text">Borrowing History</span>
+          </button>
           <button className={`nav-item${activeTab === 'add' ? ' active' : ''}`} onClick={() => handleTabChange('add')}>
             <span className="nav-icon">➕</span>
             <span className="nav-text">Add Books</span>
@@ -228,6 +236,7 @@ const AdminDashboard = () => {
             {activeTab === 'borrowed' && 'Borrowed Books'}
             {activeTab === 'expired' && 'Expired Books'}
             {activeTab === 'pending-returns' && 'Pending Returns'}
+            {activeTab === 'history' && 'Borrowing History'}
             {activeTab === 'add' && 'Add Books'}
           </h1>
         </header>
@@ -390,6 +399,55 @@ const AdminDashboard = () => {
                           >
                             ❌ Reject
                           </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          )}
+          {activeTab === 'history' && (
+            <div className="dashboard-content">
+              <h2 className="section-title">Complete Borrowing History ({borrowingHistory.length})</h2>
+              {borrowingHistory.length === 0 ? (
+                <p>No borrowing records found.</p>
+              ) : (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Borrow ID</th>
+                      <th>Book Title</th>
+                      <th>Author</th>
+                      <th>Acc No</th>
+                      <th>Borrower</th>
+                      <th>Username</th>
+                      <th>Borrowed On</th>
+                      <th>Expiry Date</th>
+                      <th>Returned On</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {borrowingHistory.map((item) => (
+                      <tr key={item.borrow_id}>
+                        <td>{item.borrow_id}</td>
+                        <td>{item.book_title}</td>
+                        <td>{item.author}</td>
+                        <td>{item.acc_no}</td>
+                        <td>{item.borrower_name}</td>
+                        <td>{item.username}</td>
+                        <td>{new Date(item.borrow_date).toLocaleDateString()}</td>
+                        <td>{new Date(item.expiry_date).toLocaleDateString()}</td>
+                        <td>
+                          {item.returned_at
+                            ? new Date(item.returned_at).toLocaleDateString()
+                            : '-'}
+                        </td>
+                        <td>
+                          <span className={`status-badge status-${item.return_status}`}>
+                            {item.status_display}
+                          </span>
                         </td>
                       </tr>
                     ))}
