@@ -46,14 +46,12 @@ const HomePage = () => {
           -ms-user-select: none;
         }
         .typing-container {
-          position: absolute;
-          top: 20%;
-          left: 50%;
-          transform: translateX(-50%);
+          position: relative;
           z-index: 2;
           width: 90%;
           max-width: 800px;
           text-align: center;
+          margin-bottom: 2rem;
         }
         .typing-text {
           font-family: 'Courier New', monospace;
@@ -84,12 +82,12 @@ const HomePage = () => {
           50% { box-shadow: 0 4px 24px rgba(59, 130, 246, 0.4); }
         }
         .home-card {
-          background: rgba(30, 41, 59, 0.7);
-          padding: 3rem 2.5rem;
-          border-radius: 22px;
-          box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15), 0 2px 8px rgba(59, 130, 246, 0.1);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(59, 130, 246, 0.3);
+          background: transparent;
+          padding: 0;
+          border-radius: 0;
+          box-shadow: none;
+          backdrop-filter: none;
+          border: none;
           min-width: 340px;
           max-width: 95vw;
           display: flex;
@@ -100,18 +98,10 @@ const HomePage = () => {
           z-index: 1;
         }
         .home-card h1 {
-          font-size: 2.4rem;
-          font-weight: 700;
-          color: #ffffff;
-          margin-bottom: 0.7rem;
-          letter-spacing: 1px;
-          text-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+          display: none;
         }
         .home-card p {
-          font-size: 1.15rem;
-          color: #94a3b8;
-          margin-bottom: 2.2rem;
-          text-align: center;
+          display: none;
         }
         .home-btn-group {
           display: flex;
@@ -160,19 +150,12 @@ const HomePage = () => {
           }
         }
         @media (max-width: 600px) {
-          .typing-container {
-            top: 15%;
-          }
           .typing-text {
             font-size: 1rem;
             padding: 15px;
           }
           .home-card {
             min-width: 90vw;
-            padding: 1.5rem 0.5rem;
-          }
-          .home-card h1 {
-            font-size: 1.5rem;
           }
           .home-btn-group {
             flex-direction: column;
