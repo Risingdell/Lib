@@ -58,7 +58,7 @@ const ThreeBackground = () => {
       opacity: 0.8
     });
 
-    // Create multiple cubes with random positions
+    // Create multiple cubes spawning from center
     const cubeCount = 25;
     const cubes = [];
 
@@ -70,33 +70,43 @@ const ThreeBackground = () => {
       const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial.clone());
       cube.add(edges);
 
-      // Random position
-      cube.position.x = (Math.random() - 0.5) * 60;
-      cube.position.y = (Math.random() - 0.5) * 60;
-      cube.position.z = (Math.random() - 0.5) * 60;
+      // Start at center
+      cube.position.set(0, 0, 0);
 
       // Random rotation
-      cube.rotation.x = Math.random() * Math.PI;
-      cube.rotation.y = Math.random() * Math.PI;
+      cube.rotation.x = Math.random() * Math.PI * 2;
+      cube.rotation.y = Math.random() * Math.PI * 2;
+      cube.rotation.z = Math.random() * Math.PI * 2;
 
       // Random scale
       const scale = Math.random() * 1.5 + 0.5;
       cube.scale.set(scale, scale, scale);
 
+      // Generate random direction vector (normalized)
+      const phi = Math.random() * Math.PI * 2; // Angle around Y axis
+      const theta = Math.acos((Math.random() * 2) - 1); // Angle from Y axis
+
+      const directionX = Math.sin(theta) * Math.cos(phi);
+      const directionY = Math.sin(theta) * Math.sin(phi);
+      const directionZ = Math.cos(theta);
+
       // Store animation data
       cube.userData = {
         rotationSpeed: {
-          x: (Math.random() - 0.5) * 0.01,
-          y: (Math.random() - 0.5) * 0.01,
-          z: (Math.random() - 0.5) * 0.01
+          x: (Math.random() - 0.5) * 0.02,
+          y: (Math.random() - 0.5) * 0.02,
+          z: (Math.random() - 0.5) * 0.02
         },
-        floatSpeed: Math.random() * 0.5 + 0.2,
-        floatOffset: Math.random() * Math.PI * 2,
-        originalPosition: {
-          x: cube.position.x,
-          y: cube.position.y,
-          z: cube.position.z
-        }
+        direction: {
+          x: directionX,
+          y: directionY,
+          z: directionZ
+        },
+        speed: Math.random() * 0.3 + 0.15, // Random speed between 0.15 and 0.45
+        maxDistance: 50 + Math.random() * 30, // Distance before respawning (50-80)
+        age: Math.random() * 200, // Start at random age for staggered spawning
+        fadeStart: 40, // Start fading at this distance
+        initialOpacity: 0.6
       };
 
       scene.add(cube);
@@ -166,30 +176,60 @@ const ThreeBackground = () => {
         cube.rotation.y += cube.userData.rotationSpeed.y;
         cube.rotation.z += cube.userData.rotationSpeed.z;
 
-        // Floating animation
-        const floatOffset = cube.userData.floatOffset;
-        const floatSpeed = cube.userData.floatSpeed;
+        // Increment age
+        cube.userData.age += cube.userData.speed;
 
-        cube.position.y = cube.userData.originalPosition.y +
-          Math.sin(elapsedTime * floatSpeed + floatOffset) * 2;
+        // Move cube outward from center
+        cube.position.x = cube.userData.direction.x * cube.userData.age;
+        cube.position.y = cube.userData.direction.y * cube.userData.age;
+        cube.position.z = cube.userData.direction.z * cube.userData.age;
 
-        // React to mouse position
-        const distance = Math.sqrt(
-          Math.pow(cube.position.x - mouseRef.current.x * 10, 2) +
-          Math.pow(cube.position.y - mouseRef.current.y * 10, 2)
+        // Calculate distance from center
+        const distanceFromCenter = Math.sqrt(
+          cube.position.x * cube.position.x +
+          cube.position.y * cube.position.y +
+          cube.position.z * cube.position.z
         );
 
-        if (distance < 15) {
-          const force = (15 - distance) / 15;
-          cube.position.x += (cube.position.x - mouseRef.current.x * 10) * force * 0.1;
-          cube.position.z += force * 2;
+        // Fade out as cube gets farther
+        if (distanceFromCenter > cube.userData.fadeStart) {
+          const fadeProgress = (distanceFromCenter - cube.userData.fadeStart) /
+                               (cube.userData.maxDistance - cube.userData.fadeStart);
+          cube.material.opacity = cube.userData.initialOpacity * (1 - fadeProgress);
 
-          // Glow effect when near mouse
-          cube.material.opacity = 0.6 + force * 0.4;
+          // Also fade the edges
+          if (cube.children[0]) {
+            cube.children[0].material.opacity = 0.8 * (1 - fadeProgress);
+          }
         } else {
-          // Return to original z position
-          cube.position.z += (cube.userData.originalPosition.z - cube.position.z) * 0.02;
-          cube.material.opacity = 0.6;
+          cube.material.opacity = cube.userData.initialOpacity;
+          if (cube.children[0]) {
+            cube.children[0].material.opacity = 0.8;
+          }
+        }
+
+        // Respawn cube at center when it reaches max distance
+        if (distanceFromCenter >= cube.userData.maxDistance) {
+          // Reset position to center
+          cube.userData.age = 0;
+
+          // Generate new random direction
+          const phi = Math.random() * Math.PI * 2;
+          const theta = Math.acos((Math.random() * 2) - 1);
+
+          cube.userData.direction.x = Math.sin(theta) * Math.cos(phi);
+          cube.userData.direction.y = Math.sin(theta) * Math.sin(phi);
+          cube.userData.direction.z = Math.cos(theta);
+
+          // Randomize speed again
+          cube.userData.speed = Math.random() * 0.3 + 0.15;
+          cube.userData.maxDistance = 50 + Math.random() * 30;
+
+          // Reset opacity
+          cube.material.opacity = cube.userData.initialOpacity;
+          if (cube.children[0]) {
+            cube.children[0].material.opacity = 0.8;
+          }
         }
       });
 

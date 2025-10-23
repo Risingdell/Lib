@@ -23,6 +23,10 @@ const HomePage = () => {
           align-items: center;
           justify-content: center;
           position: relative;
+          user-select: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
         }
         .home-card {
           background: rgba(30, 41, 59, 0.7);
