@@ -2,9 +2,9 @@
 
 .register-container {
   min-height: 100vh;
-  height: auto;
+  height: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1419 100%);
   padding: 40px 20px;
@@ -61,7 +61,7 @@
   padding: 45px 40px;
   width: 100%;
   max-width: 520px;
-  margin: 0 auto;
+  margin: 20px auto;
   position: relative;
   z-index: 2;
   box-shadow:
@@ -432,15 +432,16 @@
 /* Mobile responsiveness - Enhanced for better mobile experience */
 @media (max-width: 480px) {
   .register-container {
-    padding: 12px;
+    padding: 20px 12px;
     min-height: 100vh;
     height: auto;
+    align-items: flex-start;
   }
 
   .register-card {
     padding: 30px 20px;
     border-radius: 20px;
-    margin: 0 auto;
+    margin: 10px auto 20px auto;
     max-width: 100%;
     width: calc(100% - 24px);
   }
@@ -488,6 +489,11 @@
   .login-prompt {
     font-size: 13px;
     margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  .success-message {
+    padding: 30px 20px;
   }
 }
 
@@ -610,4 +616,24 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(59, 130, 246, 0.5);
+}
+
+/* Ensure proper scrolling on all devices */
+body, html {
+  overflow-x: hidden;
+}
+
+.register-container {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Additional mobile fix for full visibility */
+@media (max-width: 480px) {
+  body {
+    overflow-y: auto;
+  }
+
+  .register-container {
+    padding-bottom: 40px;
+  }
 }
