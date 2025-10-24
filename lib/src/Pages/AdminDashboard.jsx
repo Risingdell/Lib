@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './AdminDashboard.css';
 import BookLoader from '../Components/BookLoader';
+import { useSnackbar } from '../Context/SnackbarContext';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const AdminDashboard = () => {
+  const { showSnackbar, showConfirmSnackbar } = useSnackbar();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -97,11 +99,11 @@ const AdminDashboard = () => {
     e.preventDefault();
     try {
       await axios.post('/api/admin/add-book', form);
-      alert('Book added successfully!');
+      showSnackbar('success', 'Book added successfully!');
       setForm(initialFormState);
     } catch (err) {
       console.error(err);
-      alert('Error adding book');
+      showSnackbar('error', 'Error adding book');
     }
   };
 
@@ -124,28 +126,32 @@ const AdminDashboard = () => {
   };
 
   const handleApproveReturn = async (borrowId) => {
-    if (!window.confirm('Are you sure you want to approve this book return?')) return;
-
-    try {
-      const res = await axios.post(
-        `${API_URL}/api/admin/approve-return`,
-        { borrow_id: borrowId },
-        { withCredentials: true }
-      );
-      alert(res.data.message);
-      // Refresh pending returns list
-      const updatedRes = await axios.get(`${API_URL}/api/admin/pending-returns`, { withCredentials: true });
-      setPendingReturns(updatedRes.data);
-    } catch (err) {
-      console.error('Approve failed:', err);
-      alert('Error: ' + (err.response?.data?.message || 'Failed to approve return'));
-    }
+    showConfirmSnackbar(
+      'Are you sure you want to approve this book return?',
+      async () => {
+        try {
+          const res = await axios.post(
+            `${API_URL}/api/admin/approve-return`,
+            { borrow_id: borrowId },
+            { withCredentials: true }
+          );
+          showSnackbar('success', res.data.message);
+          // Refresh pending returns list
+          const updatedRes = await axios.get(`${API_URL}/api/admin/pending-returns`, { withCredentials: true });
+          setPendingReturns(updatedRes.data);
+        } catch (err) {
+          console.error('Approve failed:', err);
+          showSnackbar('error', err.response?.data?.message || 'Failed to approve return');
+        }
+      },
+      'success'
+    );
   };
 
   const handleRejectReturn = async (borrowId) => {
     const reason = prompt('Enter rejection reason:');
     if (!reason || reason.trim() === '') {
-      alert('Rejection reason is required');
+      showSnackbar('warning', 'Rejection reason is required');
       return;
     }
 
@@ -155,39 +161,43 @@ const AdminDashboard = () => {
         { borrow_id: borrowId, reason: reason.trim() },
         { withCredentials: true }
       );
-      alert(res.data.message);
+      showSnackbar('success', res.data.message);
       // Refresh pending returns list
       const updatedRes = await axios.get(`${API_URL}/api/admin/pending-returns`, { withCredentials: true });
       setPendingReturns(updatedRes.data);
     } catch (err) {
       console.error('Reject failed:', err);
-      alert('Error: ' + (err.response?.data?.message || 'Failed to reject return'));
+      showSnackbar('error', err.response?.data?.message || 'Failed to reject return');
     }
   };
 
   const handleApproveUser = async (userId) => {
-    if (!window.confirm('Are you sure you want to approve this user registration?')) return;
-
-    try {
-      const res = await axios.post(
-        `${API_URL}/api/admin/approve-user`,
-        { user_id: userId },
-        { withCredentials: true }
-      );
-      alert(res.data.message);
-      // Refresh pending users list
-      const updatedRes = await axios.get(`${API_URL}/api/admin/pending-users`, { withCredentials: true });
-      setPendingUsers(updatedRes.data);
-    } catch (err) {
-      console.error('Approve failed:', err);
-      alert('Error: ' + (err.response?.data?.message || 'Failed to approve user'));
-    }
+    showConfirmSnackbar(
+      'Are you sure you want to approve this user registration?',
+      async () => {
+        try {
+          const res = await axios.post(
+            `${API_URL}/api/admin/approve-user`,
+            { user_id: userId },
+            { withCredentials: true }
+          );
+          showSnackbar('success', res.data.message);
+          // Refresh pending users list
+          const updatedRes = await axios.get(`${API_URL}/api/admin/pending-users`, { withCredentials: true });
+          setPendingUsers(updatedRes.data);
+        } catch (err) {
+          console.error('Approve failed:', err);
+          showSnackbar('error', err.response?.data?.message || 'Failed to approve user');
+        }
+      },
+      'success'
+    );
   };
 
   const handleRejectUser = async (userId) => {
     const reason = prompt('Enter rejection reason:');
     if (!reason || reason.trim() === '') {
-      alert('Rejection reason is required');
+      showSnackbar('warning', 'Rejection reason is required');
       return;
     }
 
@@ -197,13 +207,13 @@ const AdminDashboard = () => {
         { user_id: userId, reason: reason.trim() },
         { withCredentials: true }
       );
-      alert(res.data.message);
+      showSnackbar('success', res.data.message);
       // Refresh pending users list
       const updatedRes = await axios.get(`${API_URL}/api/admin/pending-users`, { withCredentials: true });
       setPendingUsers(updatedRes.data);
     } catch (err) {
       console.error('Reject failed:', err);
-      alert('Error: ' + (err.response?.data?.message || 'Failed to reject user'));
+      showSnackbar('error', err.response?.data?.message || 'Failed to reject user');
     }
   };
 

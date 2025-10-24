@@ -4,9 +4,11 @@ import axios from "axios";
 import { UserContext } from "../Context/UserContext";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
+import { useSnackbar } from "../Context/SnackbarContext";
 
 function Login() {
   const { setUser } = useContext(UserContext);
+  const { showSnackbar } = useSnackbar();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -34,7 +36,7 @@ function Login() {
     })
     .catch((error) => {
       console.error("Error logging in:", error);
-      alert("Login failed.");
+      showSnackbar('error', 'Login failed. Please check your credentials.');
     });
   };
 

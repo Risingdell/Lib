@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import './MainPage.css';
 import axios from 'axios';
 import BookLoader from '../Components/BookLoader';
+import { useSnackbar } from '../Context/SnackbarContext';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const MainPage = () => {
+  const { showSnackbar, showConfirmSnackbar } = useSnackbar();
   const [sellStatusMessage, setSellStatusMessage] = useState('');
   const [availableBooks, setAvailableBooks] = useState([]);
   const [borrowedBooks, setBorrowedBooks] = useState([]);
@@ -107,7 +109,7 @@ const MainPage = () => {
     const url = API_URL + '/borrow';
     axios.post(url, { book_id: bookId }, { withCredentials: true })
       .then(res => {
-        alert(res.data.message);
+        showSnackbar('success', res.data.message);
         if (activeTab === 'books') {
           const booksUrl = API_URL + '/books';
           axios.get(booksUrl)
@@ -116,7 +118,7 @@ const MainPage = () => {
       })
       .catch(err => {
         console.error('Borrow failed', err);
-        alert('Failed to borrow book');
+        showSnackbar('error', 'Failed to borrow book');
       })
       .finally(() => {
         setBorrowingBookId(null);
@@ -127,61 +129,73 @@ const MainPage = () => {
     const url = API_URL + '/sell-books/request';
     axios.post(url, { id }, { withCredentials: true })
       .then((response) => {
-        alert(response.data.message);
+        showSnackbar('success', response.data.message);
         reloadSellingBooks();
         reloadRequestedBooks();
       })
       .catch((err) => {
         const errorMsg = err.response?.data?.message || 'Request failed';
-        alert('❌ ' + errorMsg);
+        showSnackbar('error', errorMsg);
       });
   };
 
   const handleCancelRequest = (id) => {
-    if (!window.confirm('Are you sure you want to cancel this request?')) return;
-
-    const url = API_URL + '/sell-books/cancel-request';
-    axios.post(url, { id }, { withCredentials: true })
-      .then((response) => {
-        alert(response.data.message);
-        reloadSellingBooks();
-        reloadRequestedBooks();
-      })
-      .catch((err) => {
-        const errorMsg = err.response?.data?.message || 'Cancel failed';
-        alert('❌ ' + errorMsg);
-      });
+    showConfirmSnackbar(
+      'Are you sure you want to cancel this request?',
+      () => {
+        const url = API_URL + '/sell-books/cancel-request';
+        axios.post(url, { id }, { withCredentials: true })
+          .then((response) => {
+            showSnackbar('success', response.data.message);
+            reloadSellingBooks();
+            reloadRequestedBooks();
+          })
+          .catch((err) => {
+            const errorMsg = err.response?.data?.message || 'Cancel failed';
+            showSnackbar('error', errorMsg);
+          });
+      },
+      'warning'
+    );
   };
 
   const handleMarkSold = (id) => {
-    if (!window.confirm('Mark this book as sold to the current buyer?')) return;
-
-    const url = API_URL + '/sell-books/mark-sold';
-    axios.post(url, { id }, { withCredentials: true })
-      .then((response) => {
-        alert(response.data.message);
-        reloadSellingBooks();
-      })
-      .catch((err) => {
-        const errorMsg = err.response?.data?.message || 'Failed to mark as sold';
-        alert('❌ ' + errorMsg);
-      });
+    showConfirmSnackbar(
+      'Mark this book as sold to the current buyer?',
+      () => {
+        const url = API_URL + '/sell-books/mark-sold';
+        axios.post(url, { id }, { withCredentials: true })
+          .then((response) => {
+            showSnackbar('success', response.data.message);
+            reloadSellingBooks();
+          })
+          .catch((err) => {
+            const errorMsg = err.response?.data?.message || 'Failed to mark as sold';
+            showSnackbar('error', errorMsg);
+          });
+      },
+      'success'
+    );
   };
 
   const handleConfirmReceive = (id) => {
-    if (!window.confirm('Confirm that you have received this book?')) return;
-
-    const url = API_URL + '/sell-books/confirm-receive';
-    axios.post(url, { id }, { withCredentials: true })
-      .then((response) => {
-        alert(response.data.message);
-        reloadSellingBooks();
-        reloadRequestedBooks();
-      })
-      .catch((err) => {
-        const errorMsg = err.response?.data?.message || 'Confirm failed';
-        alert('❌ ' + errorMsg);
-      });
+    showConfirmSnackbar(
+      'Confirm that you have received this book?',
+      () => {
+        const url = API_URL + '/sell-books/confirm-receive';
+        axios.post(url, { id }, { withCredentials: true })
+          .then((response) => {
+            showSnackbar('success', response.data.message);
+            reloadSellingBooks();
+            reloadRequestedBooks();
+          })
+          .catch((err) => {
+            const errorMsg = err.response?.data?.message || 'Confirm failed';
+            showSnackbar('error', errorMsg);
+          });
+      },
+      'success'
+    );
   };
 
   const reloadSellingBooks = () => {
@@ -197,22 +211,26 @@ const MainPage = () => {
   };
 
   const handleCancelSell = (id) => {
-    if (!window.confirm('Are you sure you want to remove this listing?')) return;
-
-    const url = API_URL + '/sell-books/' + id;
-    axios.delete(url, { withCredentials: true })
-      .then(() => {
-        alert('Listing removed successfully');
-        reloadSellingBooks();
-      })
-      .catch(() => alert('❌ Failed to cancel listing.'));
+    showConfirmSnackbar(
+      'Are you sure you want to remove this listing?',
+      () => {
+        const url = API_URL + '/sell-books/' + id;
+        axios.delete(url, { withCredentials: true })
+          .then(() => {
+            showSnackbar('success', 'Listing removed successfully');
+            reloadSellingBooks();
+          })
+          .catch(() => showSnackbar('error', 'Failed to cancel listing'));
+      },
+      'error'
+    );
   };
 
   const handleReturn = (bookId) => {
     const url = API_URL + '/return-book';
     axios.post(url, { book_id: bookId }, { withCredentials: true })
       .then(res => {
-        alert(res.data.message);
+        showSnackbar('success', res.data.message);
         if (activeTab === 'borrowed') {
           const borrowedUrl = API_URL + '/borrowed-books';
           axios.get(borrowedUrl, { withCredentials: true })
@@ -224,7 +242,7 @@ const MainPage = () => {
       })
       .catch(err => {
         console.error('Return failed', err);
-        alert('Book not submitted');
+        showSnackbar('error', 'Book not submitted');
       });
   };
 
@@ -232,11 +250,11 @@ const MainPage = () => {
     const file = event.target.files[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      alert('Please upload an image file');
+      showSnackbar('warning', 'Please upload an image file');
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      alert('Image size should be less than 5MB');
+      showSnackbar('warning', 'Image size should be less than 5MB');
       return;
     }
     const formData = new FormData();
@@ -251,11 +269,11 @@ const MainPage = () => {
     })
       .then(response => {
         setProfileImage(response.data.imageUrl);
-        alert('Profile image updated successfully!');
+        showSnackbar('success', 'Profile image updated successfully!');
       })
       .catch(err => {
         console.error('Image upload failed', err);
-        alert('Failed to upload image. Please try again.');
+        showSnackbar('error', 'Failed to upload image. Please try again.');
       })
       .finally(() => {
         setIsUploadingImage(false);
@@ -263,19 +281,22 @@ const MainPage = () => {
   };
 
   const handleRemoveImage = () => {
-    if (!window.confirm('Are you sure you want to remove your profile picture?')) {
-      return;
-    }
-    const url = API_URL + '/api/user/remove-profile-image';
-    axios.delete(url, { withCredentials: true })
-      .then(() => {
-        setProfileImage(null);
-        alert('Profile image removed successfully!');
-      })
-      .catch(err => {
-        console.error('Failed to remove image', err);
-        alert('Failed to remove image. Please try again.');
-      });
+    showConfirmSnackbar(
+      'Are you sure you want to remove your profile picture?',
+      () => {
+        const url = API_URL + '/api/user/remove-profile-image';
+        axios.delete(url, { withCredentials: true })
+          .then(() => {
+            setProfileImage(null);
+            showSnackbar('success', 'Profile image removed successfully!');
+          })
+          .catch(err => {
+            console.error('Failed to remove image', err);
+            showSnackbar('error', 'Failed to remove image. Please try again.');
+          });
+      },
+      'warning'
+    );
   };
 
   const handleTabChange = (tab) => {

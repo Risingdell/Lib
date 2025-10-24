@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "./Register.css";
+import { useSnackbar } from "../Context/SnackbarContext";
 
 function Register() {
+  const { showSnackbar } = useSnackbar();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -47,19 +49,19 @@ function Register() {
 
   const register = () => {
     if (!acceptTerms) {
-      alert("Please accept the Terms of Use & Privacy Policy.");
+      showSnackbar('warning', "Please accept the Terms of Use & Privacy Policy.");
       return;
     }
 
     // Validate USN before submitting
     const usnPattern = /^[1-4]SN\d{2}AD\d{3}$/;
     if (!usnPattern.test(formData.usn)) {
-      alert("Invalid USN format. USN must follow the pattern: 4SN23AD000 (Example: 1SN23AD001, 4SN23AD999)");
+      showSnackbar('warning', "Invalid USN format. USN must follow the pattern: 4SN23AD000 (Example: 1SN23AD001, 4SN23AD999)");
       return;
     }
 
     if (!formData.usn.includes('AD')) {
-      alert("Invalid USN. Only students with 'AD' department code can register.");
+      showSnackbar('warning', "Invalid USN. Only students with 'AD' department code can register.");
       return;
     }
 
@@ -91,7 +93,7 @@ function Register() {
     .catch((error) => {
       console.error("Error registering:", error);
       const errorMessage = error.response?.data?.message || "Registration failed.";
-      alert(errorMessage);
+      showSnackbar('error', errorMessage);
     });
   };
 
