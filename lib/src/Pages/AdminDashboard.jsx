@@ -19,6 +19,7 @@ const AdminDashboard = () => {
   const [borrowingHistory, setBorrowingHistory] = useState([]);
   const [pendingUsers, setPendingUsers] = useState([]);
   const [members, setMembers] = useState([]);
+  const [memberSearchQuery, setMemberSearchQuery] = useState('');
   const initialFormState = {
     acc_no: '',
     author: '',
@@ -257,7 +258,9 @@ const AdminDashboard = () => {
 
         <nav className="sidebar-nav">
           <button className={`nav-item${activeTab === 'profile' ? ' active' : ''}`} onClick={() => handleTabChange('profile')}>
-            <span className="nav-icon">👤</span>
+            <span className="nav-icon">
+              <img src="/home3-more.svg" alt="Home" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Profile</span>
           </button>
           <button className={`nav-item${activeTab === 'registration-requests' ? ' active' : ''}`} onClick={() => handleTabChange('registration-requests')}>
@@ -419,13 +422,87 @@ const AdminDashboard = () => {
               )}
             </div>
           )}
-          {activeTab === 'members' && (
-            <div className="dashboard-content">
-              <h2 className="section-title">All Members ({members.length})</h2>
-              {members.length === 0 ? (
-                <p>No members found.</p>
-              ) : (
-                <table>
+          {activeTab === 'members' && (() => {
+            // Filter members based on search query
+            const filteredMembers = members.filter(member => {
+              if (!memberSearchQuery) return true;
+              const query = memberSearchQuery.toLowerCase();
+              return (
+                member.firstName?.toLowerCase().includes(query) ||
+                member.lastName?.toLowerCase().includes(query) ||
+                member.username?.toLowerCase().includes(query) ||
+                member.usn?.toLowerCase().includes(query) ||
+                member.email?.toLowerCase().includes(query) ||
+                member.id?.toString().includes(query)
+              );
+            });
+
+            return (
+              <div className="dashboard-content">
+                <h2 className="section-title">All Members ({members.length})</h2>
+
+                {/* Search Bar */}
+                <div style={{
+                  marginBottom: '20px',
+                  display: 'flex',
+                  gap: '10px',
+                  alignItems: 'center'
+                }}>
+                  <div style={{
+                    flex: 1,
+                    position: 'relative'
+                  }}>
+                    <span style={{
+                      position: 'absolute',
+                      left: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      fontSize: '18px'
+                    }}>🔍</span>
+                    <input
+                      type="text"
+                      placeholder="Search members by name, username, USN, email, or ID..."
+                      value={memberSearchQuery}
+                      onChange={(e) => setMemberSearchQuery(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '12px 12px 12px 40px',
+                        borderRadius: '8px',
+                        border: '1px solid #e2e8f0',
+                        fontSize: '14px',
+                        outline: 'none',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                      onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                    />
+                  </div>
+                  {memberSearchQuery && (
+                    <button
+                      onClick={() => setMemberSearchQuery('')}
+                      style={{
+                        padding: '12px 20px',
+                        borderRadius: '8px',
+                        border: 'none',
+                        background: '#ef4444',
+                        color: 'white',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => e.target.style.background = '#dc2626'}
+                      onMouseLeave={(e) => e.target.style.background = '#ef4444'}
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                {filteredMembers.length === 0 ? (
+                  <p>{memberSearchQuery ? `No members found matching "${memberSearchQuery}"` : 'No members found.'}</p>
+                ) : (
+                  <table>
                   <thead>
                     <tr>
                       <th>User ID</th>
@@ -439,7 +516,7 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {members.map((member) => (
+                    {filteredMembers.map((member) => (
                       <tr key={member.id}>
                         <td>{member.id}</td>
                         <td>{member.firstName} {member.lastName}</td>
@@ -461,9 +538,10 @@ const AdminDashboard = () => {
                     ))}
                   </tbody>
                 </table>
-              )}
-            </div>
-          )}
+                )}
+              </div>
+            );
+          })()}
           {activeTab === 'borrowed' && (
             <div className="dashboard-content">
               <h2 className="section-title">Borrowed Books</h2>

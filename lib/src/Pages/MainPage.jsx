@@ -27,6 +27,7 @@ const MainPage = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [borrowingBookId, setBorrowingBookId] = useState(null);
+  const [bookSearchQuery, setBookSearchQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -327,9 +328,80 @@ const MainPage = () => {
           book => book.return_status === 'active' || !book.return_status
         ).length;
 
+        // Filter books based on search query
+        const filteredBooks = availableBooks.filter(book => {
+          if (!bookSearchQuery) return true;
+          const query = bookSearchQuery.toLowerCase();
+          return (
+            book.title?.toLowerCase().includes(query) ||
+            book.author?.toLowerCase().includes(query) ||
+            book.acc_no?.toLowerCase().includes(query) ||
+            book.donated_by?.toLowerCase().includes(query)
+          );
+        });
+
         return (
           <div className="books-section">
             <h2 className="section-title">All Available Books</h2>
+
+            {/* Search Bar */}
+            <div style={{
+              marginBottom: '20px',
+              display: 'flex',
+              gap: '10px',
+              alignItems: 'center'
+            }}>
+              <div style={{
+                flex: 1,
+                position: 'relative'
+              }}>
+                <span style={{
+                  position: 'absolute',
+                  left: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  fontSize: '18px'
+                }}>🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search books by title, author, acc no, or donor..."
+                  value={bookSearchQuery}
+                  onChange={(e) => setBookSearchQuery(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '12px 12px 12px 40px',
+                    borderRadius: '8px',
+                    border: '1px solid #e2e8f0',
+                    fontSize: '14px',
+                    outline: 'none',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                  onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+                />
+              </div>
+              {bookSearchQuery && (
+                <button
+                  onClick={() => setBookSearchQuery('')}
+                  style={{
+                    padding: '12px 20px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: '#ef4444',
+                    color: 'white',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => e.target.style.background = '#dc2626'}
+                  onMouseLeave={(e) => e.target.style.background = '#ef4444'}
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
             {currentlyBorrowed > 0 && (
               <div style={{
                 background: currentlyBorrowed >= 2 ? '#fee2e2' : '#fffbeb',
@@ -353,9 +425,14 @@ const MainPage = () => {
                 )}
               </div>
             )}
-            <div className="books-grid">
-              {availableBooks.map(book => (
-                <div key={book.id} className="book-card">
+            {filteredBooks.length === 0 ? (
+              <div className="empty-state">
+                <p>{bookSearchQuery ? `No books found matching "${bookSearchQuery}"` : 'No books available'}</p>
+              </div>
+            ) : (
+              <div className="books-grid">
+                {filteredBooks.map(book => (
+                  <div key={book.id} className="book-card">
                   <div className="book-info">
                     <h3 className="book-title">{book.title}</h3>
                     <p className="book-author">by {book.author}</p>
@@ -379,7 +456,8 @@ const MainPage = () => {
                   </button>
                 </div>
               ))}
-            </div>
+              </div>
+            )}
           </div>
         );
       case 'borrowed':
@@ -778,7 +856,9 @@ const MainPage = () => {
             className={'nav-item ' + (activeTab === 'books' ? 'active' : '')}
             onClick={() => handleTabChange('books')}
           >
-            <span className="nav-icon">🏠</span>
+            <span className="nav-icon">
+              <img src="/home3-more.svg" alt="Home" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Home</span>
           </button>
           <button
