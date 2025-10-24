@@ -14,7 +14,6 @@ function Register() {
     usn: '',
     password: ''
   });
-  const [acceptTerms, setAcceptTerms] = useState(false);
   const [success, setSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [usnError, setUsnError] = useState('');
@@ -48,11 +47,6 @@ function Register() {
   };
 
   const register = () => {
-    if (!acceptTerms) {
-      showSnackbar('warning', "Please accept the Terms of Use & Privacy Policy.");
-      return;
-    }
-
     // Validate USN before submitting
     const usnPattern = /^[1-4]SN\d{2}AD\d{3}$/;
     if (!usnPattern.test(formData.usn)) {
@@ -87,7 +81,6 @@ function Register() {
         usn: '',
         password: ''
       });
-      setAcceptTerms(false);
       setUsnError('');
     })
     .catch((error) => {
@@ -192,19 +185,6 @@ function Register() {
                 autoComplete="new-password"
               />
             </div>
-
-            <div className="terms-group">
-              <label className="terms-label">
-                <input
-                  type="checkbox"
-                  checked={acceptTerms}
-                  onChange={(e) => setAcceptTerms(e.target.checked)}
-                  required
-                />
-                <span>I accept the Terms of Use & Privacy Policy</span>
-              </label>
-            </div>
-
 
             <button type="submit" className="register-button">
               Register Now

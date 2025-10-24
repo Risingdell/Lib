@@ -11,7 +11,6 @@ function Login() {
   const { showSnackbar } = useSnackbar();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [loginStatus, setLoginStatus] = useState('');
   const navigate = useNavigate();
 
@@ -70,20 +69,6 @@ function Login() {
               required
               autoComplete="new-password"
             />
-          </div>
-
-          <div className="login-options">
-            <label className="remember-me">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-              />
-              <span>Remember Me</span>
-            </label>
-            <Link to="/forgot-password" className="forgot-password">
-              Forget Password
-            </Link>
           </div>
 
           <button type="submit" className="login-button">
