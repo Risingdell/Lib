@@ -28,6 +28,7 @@ const MainPage = () => {
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [borrowingBookId, setBorrowingBookId] = useState(null);
   const [bookSearchQuery, setBookSearchQuery] = useState('');
+  const [marketplaceSearchQuery, setMarketplaceSearchQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -620,14 +621,26 @@ const MainPage = () => {
           </div>
         );
       case 'view-sell':
+        // Filter marketplace books based on search query
+        const filteredMarketplaceBooks = sellingBooks.filter(item => {
+          if (!marketplaceSearchQuery) return true;
+          const query = marketplaceSearchQuery.toLowerCase();
+          return (
+            item.title?.toLowerCase().includes(query) ||
+            item.author?.toLowerCase().includes(query) ||
+            item.acc_no?.toLowerCase().includes(query) ||
+            item.description?.toLowerCase().includes(query)
+          );
+        });
+
         return (
           <div className="view-sell-section">
             <h2 className="section-title">Marketplace Books</h2>
-            {sellingBooks.length === 0 ? (
-              <p>No books listed yet.</p>
+            {filteredMarketplaceBooks.length === 0 ? (
+              <p>{marketplaceSearchQuery ? `No books found matching "${marketplaceSearchQuery}"` : 'No books listed yet.'}</p>
             ) : (
               <div className="books-grid">
-                {sellingBooks.map((item) => {
+                {filteredMarketplaceBooks.map((item) => {
                   const isSeller = item.seller_id === user?.id;
                   const isActiveBuyer = item.active_requester_id === user?.id;
                   const hasRequested = item.requesters?.some(r => r.id === user?.id);
@@ -953,6 +966,19 @@ const MainPage = () => {
             {activeTab === 'view-sell' && 'Marketplace'}
             {activeTab === 'requested-sell' && 'Requested Books'}
           </h1>
+          {/* Search bar in header */}
+          {(activeTab === 'books' || activeTab === 'view-sell') && (
+            <div className="header-search">
+              <input
+                type="text"
+                placeholder={activeTab === 'books' ? 'Search all books...' : 'Search marketplace...'}
+                value={activeTab === 'books' ? bookSearchQuery : marketplaceSearchQuery}
+                onChange={(e) => activeTab === 'books' ? setBookSearchQuery(e.target.value) : setMarketplaceSearchQuery(e.target.value)}
+                className="header-search-input"
+              />
+              <span className="search-icon">🔍</span>
+            </div>
+          )}
         </header>
         <div className="content-area">
           {renderContent()}

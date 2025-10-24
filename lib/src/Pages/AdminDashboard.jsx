@@ -20,6 +20,7 @@ const AdminDashboard = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
   const [members, setMembers] = useState([]);
   const [memberSearchQuery, setMemberSearchQuery] = useState('');
+  const [historySearchQuery, setHistorySearchQuery] = useState('');
   const initialFormState = {
     acc_no: '',
     author: '',
@@ -334,6 +335,19 @@ const AdminDashboard = () => {
             {activeTab === 'history' && 'Borrowing History'}
             {activeTab === 'add' && 'Add Books'}
           </h1>
+          {/* Search bar in header */}
+          {(activeTab === 'members' || activeTab === 'history') && (
+            <div className="header-search">
+              <input
+                type="text"
+                placeholder={activeTab === 'members' ? 'Search members...' : 'Search borrowing history...'}
+                value={activeTab === 'members' ? memberSearchQuery : historySearchQuery}
+                onChange={(e) => activeTab === 'members' ? setMemberSearchQuery(e.target.value) : setHistorySearchQuery(e.target.value)}
+                className="header-search-input"
+              />
+              <span className="search-icon">🔍</span>
+            </div>
+          )}
         </header>
         <div className="content-area">
           {activeTab === 'profile' && (
@@ -676,29 +690,44 @@ const AdminDashboard = () => {
               )}
             </div>
           )}
-          {activeTab === 'history' && (
-            <div className="dashboard-content">
-              <h2 className="section-title">Complete Borrowing History ({borrowingHistory.length})</h2>
-              {borrowingHistory.length === 0 ? (
-                <p>No borrowing records found.</p>
-              ) : (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Borrow ID</th>
-                      <th>Book Title</th>
-                      <th>Author</th>
-                      <th>Acc No</th>
-                      <th>Borrower</th>
-                      <th>Username</th>
-                      <th>Borrowed On</th>
-                      <th>Expiry Date</th>
-                      <th>Returned On</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {borrowingHistory.map((item) => (
+          {activeTab === 'history' && (() => {
+            // Filter borrowing history based on search query
+            const filteredHistory = borrowingHistory.filter(item => {
+              if (!historySearchQuery) return true;
+              const query = historySearchQuery.toLowerCase();
+              return (
+                item.book_title?.toLowerCase().includes(query) ||
+                item.author?.toLowerCase().includes(query) ||
+                item.acc_no?.toLowerCase().includes(query) ||
+                item.borrower_name?.toLowerCase().includes(query) ||
+                item.username?.toLowerCase().includes(query) ||
+                item.borrow_id?.toString().includes(query)
+              );
+            });
+
+            return (
+              <div className="dashboard-content">
+                <h2 className="section-title">Complete Borrowing History ({borrowingHistory.length})</h2>
+                {filteredHistory.length === 0 ? (
+                  <p>{historySearchQuery ? `No records found matching "${historySearchQuery}"` : 'No borrowing records found.'}</p>
+                ) : (
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Borrow ID</th>
+                        <th>Book Title</th>
+                        <th>Author</th>
+                        <th>Acc No</th>
+                        <th>Borrower</th>
+                        <th>Username</th>
+                        <th>Borrowed On</th>
+                        <th>Expiry Date</th>
+                        <th>Returned On</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredHistory.map((item) => (
                       <tr key={item.borrow_id}>
                         <td>{item.borrow_id}</td>
                         <td>{item.book_title}</td>
@@ -720,11 +749,12 @@ const AdminDashboard = () => {
                         </td>
                       </tr>
                     ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          )}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            );
+          })()}
           {activeTab === 'add' && (
             <div className="dashboard-content">
               <h2 className="section-title">Add New Book</h2>
