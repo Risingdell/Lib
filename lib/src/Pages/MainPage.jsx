@@ -908,7 +908,9 @@ const MainPage = () => {
             className={'nav-item ' + (activeTab === 'requested-sell' ? 'active' : '')}
             onClick={() => handleTabChange('requested-sell')}
           >
-            <span className="nav-icon">📥</span>
+            <span className="nav-icon">
+              <img src="/request.svg" alt="Requested Books" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">
               Requested Books
               {requestedBooks.length > 0 && (
@@ -931,7 +933,9 @@ const MainPage = () => {
                 .catch(() => navigate('/login'));
             }}
           >
-            <span className="nav-icon">🚪</span>
+            <span className="nav-icon">
+              <img src="/logout.svg" alt="Logout" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Log Out</span>
           </button>
         </div>

@@ -264,11 +264,15 @@ const AdminDashboard = () => {
             <span className="nav-text">Profile</span>
           </button>
           <button className={`nav-item${activeTab === 'registration-requests' ? ' active' : ''}`} onClick={() => handleTabChange('registration-requests')}>
-            <span className="nav-icon">👥</span>
+            <span className="nav-icon">
+              <img src="/requests.svg" alt="Registration Requests" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Registration Requests</span>
           </button>
           <button className={`nav-item${activeTab === 'members' ? ' active' : ''}`} onClick={() => handleTabChange('members')}>
-            <span className="nav-icon">👨‍👩‍👧‍👦</span>
+            <span className="nav-icon">
+              <img src="/members.svg" alt="Members" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Members</span>
           </button>
           <button className={`nav-item${activeTab === 'borrowed' ? ' active' : ''}`} onClick={() => handleTabChange('borrowed')}>
@@ -278,11 +282,15 @@ const AdminDashboard = () => {
             <span className="nav-text">Borrowed Books</span>
           </button>
           <button className={`nav-item${activeTab === 'expired' ? ' active' : ''}`} onClick={() => handleTabChange('expired')}>
-            <span className="nav-icon">⏰</span>
+            <span className="nav-icon">
+              <img src="/expired.svg" alt="Expired Books" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Expired Books</span>
           </button>
           <button className={`nav-item${activeTab === 'pending-returns' ? ' active' : ''}`} onClick={() => handleTabChange('pending-returns')}>
-            <span className="nav-icon">⏳</span>
+            <span className="nav-icon">
+              <img src="/pending.svg" alt="Pending Returns" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Pending Returns</span>
           </button>
           <button className={`nav-item${activeTab === 'history' ? ' active' : ''}`} onClick={() => handleTabChange('history')}>
@@ -292,7 +300,9 @@ const AdminDashboard = () => {
             <span className="nav-text">Borrowing History</span>
           </button>
           <button className={`nav-item${activeTab === 'add' ? ' active' : ''}`} onClick={() => handleTabChange('add')}>
-            <span className="nav-icon">➕</span>
+            <span className="nav-icon">
+              <img src="/add.svg" alt="Add Books" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Add Books</span>
           </button>
         </nav>
@@ -302,7 +312,9 @@ const AdminDashboard = () => {
             <span className="nav-text">{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
           </button>
           <button className="nav-item logout-btn" onClick={handleLogout}>
-            <span className="nav-icon">🚪</span>
+            <span className="nav-icon">
+              <img src="/logout.svg" alt="Logout" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Logout</span>
           </button>
         </div>
