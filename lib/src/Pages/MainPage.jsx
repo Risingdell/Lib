@@ -120,10 +120,17 @@ const MainPage = () => {
           axios.get(booksUrl)
             .then(res => setAvailableBooks(res.data));
         }
+        // Refresh borrowed books to update count
+        if (activeTab === 'borrowed') {
+          const borrowedUrl = API_URL + '/borrowed-books';
+          axios.get(borrowedUrl, { withCredentials: true })
+            .then(res => setBorrowedBooks(res.data));
+        }
       })
       .catch(err => {
         console.error('Borrow failed', err);
-        showSnackbar('error', 'Failed to borrow book');
+        const errorMessage = err.response?.data?.message || 'Failed to borrow book';
+        showSnackbar('error', errorMessage);
       })
       .finally(() => {
         setBorrowingBookId(null);
@@ -315,9 +322,37 @@ const MainPage = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'books':
+        // Count active borrowed books for the info message
+        const currentlyBorrowed = borrowedBooks.filter(
+          book => book.return_status === 'active' || !book.return_status
+        ).length;
+
         return (
           <div className="books-section">
             <h2 className="section-title">All Available Books</h2>
+            {currentlyBorrowed > 0 && (
+              <div style={{
+                background: currentlyBorrowed >= 2 ? '#fee2e2' : '#fffbeb',
+                border: `1px solid ${currentlyBorrowed >= 2 ? '#fca5a5' : '#fde68a'}`,
+                color: currentlyBorrowed >= 2 ? '#991b1b' : '#92400e',
+                padding: '12px 16px',
+                borderRadius: '8px',
+                marginBottom: '20px',
+                fontSize: '14px'
+              }}>
+                {currentlyBorrowed >= 2 ? (
+                  <>
+                    ⚠️ <strong>Borrowing Limit Reached:</strong> You have borrowed {currentlyBorrowed}/2 books.
+                    Please return a book before borrowing another one.
+                  </>
+                ) : (
+                  <>
+                    ℹ️ You have borrowed {currentlyBorrowed}/2 books.
+                    You can borrow {2 - currentlyBorrowed} more {2 - currentlyBorrowed === 1 ? 'book' : 'books'}.
+                  </>
+                )}
+              </div>
+            )}
             <div className="books-grid">
               {availableBooks.map(book => (
                 <div key={book.id} className="book-card">
@@ -333,9 +368,14 @@ const MainPage = () => {
                   <button
                     className="borrow-btn"
                     onClick={() => handleBorrow(book.id)}
-                    disabled={borrowingBookId === book.id}
+                    disabled={borrowingBookId === book.id || currentlyBorrowed >= 2}
+                    style={{
+                      opacity: currentlyBorrowed >= 2 ? 0.5 : 1,
+                      cursor: currentlyBorrowed >= 2 ? 'not-allowed' : 'pointer'
+                    }}
                   >
-                    {borrowingBookId === book.id ? 'Borrowing...' : 'Borrow Book'}
+                    {borrowingBookId === book.id ? 'Borrowing...' :
+                     currentlyBorrowed >= 2 ? 'Limit Reached' : 'Borrow Book'}
                   </button>
                 </div>
               ))}
@@ -343,9 +383,27 @@ const MainPage = () => {
           </div>
         );
       case 'borrowed':
+        // Count active borrowed books (not returned or pending return)
+        const activeBorrowedCount = borrowedBooks.filter(
+          book => book.return_status === 'active' || !book.return_status
+        ).length;
+
         return (
           <div className="borrowed-section">
-            <h2 className="section-title">Currently Borrowed Books</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 className="section-title" style={{ margin: 0 }}>Currently Borrowed Books</h2>
+              <div style={{
+                background: activeBorrowedCount >= 2 ? '#fee2e2' : '#dbeafe',
+                color: activeBorrowedCount >= 2 ? '#991b1b' : '#1e40af',
+                padding: '8px 16px',
+                borderRadius: '20px',
+                fontWeight: '600',
+                fontSize: '14px'
+              }}>
+                {activeBorrowedCount} / 2 Books Borrowed
+                {activeBorrowedCount >= 2 && ' (Limit Reached)'}
+              </div>
+            </div>
             {borrowedBooks.length === 0 ? (
               <div className="empty-state"><p>No books currently borrowed</p></div>
             ) : (
@@ -728,7 +786,14 @@ const MainPage = () => {
             onClick={() => handleTabChange('borrowed')}
           >
             <span className="nav-icon">📖</span>
-            <span className="nav-text">My Books</span>
+            <span className="nav-text">
+              My Books
+              {borrowedBooks.filter(b => b.return_status === 'active' || !b.return_status).length > 0 && (
+                <span className="badge">
+                  {borrowedBooks.filter(b => b.return_status === 'active' || !b.return_status).length}/2
+                </span>
+              )}
+            </span>
           </button>
           <button
             className={'nav-item ' + (activeTab === 'history' ? 'active' : '')}
