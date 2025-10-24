@@ -290,8 +290,8 @@ const AdminDashboard = () => {
           </button>
         </nav>
         <div className="sidebar-footer">
-          <button className="nav-item theme-toggle-btn" onClick={toggleTheme}>
-            <span className="nav-icon">{theme === 'light' ? '🌙' : '☀️'}</span>
+          <button className="nav-item theme-toggle-btn" onClick={toggleTheme} title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}>
+            <span className="nav-icon" key={theme}>{theme === 'light' ? '🌙' : '☀️'}</span>
             <span className="nav-text">{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
           </button>
           <button className="nav-item logout-btn" onClick={handleLogout}>
