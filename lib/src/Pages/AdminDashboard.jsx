@@ -461,9 +461,9 @@ const AdminDashboard = () => {
                 member.firstName?.toLowerCase().includes(query) ||
                 member.lastName?.toLowerCase().includes(query) ||
                 member.username?.toLowerCase().includes(query) ||
-                member.usn?.toLowerCase().includes(query) ||
+                String(member.usn || '').toLowerCase().includes(query) ||
                 member.email?.toLowerCase().includes(query) ||
-                member.id?.toString().includes(query)
+                String(member.id || '').includes(query)
               );
             });
 
@@ -698,10 +698,10 @@ const AdminDashboard = () => {
               return (
                 item.book_title?.toLowerCase().includes(query) ||
                 item.author?.toLowerCase().includes(query) ||
-                item.acc_no?.toLowerCase().includes(query) ||
+                String(item.acc_no || '').toLowerCase().includes(query) ||
                 item.borrower_name?.toLowerCase().includes(query) ||
                 item.username?.toLowerCase().includes(query) ||
-                item.borrow_id?.toString().includes(query)
+                String(item.borrow_id || '').includes(query)
               );
             });
 

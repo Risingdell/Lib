@@ -336,7 +336,7 @@ const MainPage = () => {
           return (
             book.title?.toLowerCase().includes(query) ||
             book.author?.toLowerCase().includes(query) ||
-            book.acc_no?.toLowerCase().includes(query) ||
+            String(book.acc_no || '').toLowerCase().includes(query) ||
             book.donated_by?.toLowerCase().includes(query)
           );
         });
@@ -628,7 +628,7 @@ const MainPage = () => {
           return (
             item.title?.toLowerCase().includes(query) ||
             item.author?.toLowerCase().includes(query) ||
-            item.acc_no?.toLowerCase().includes(query) ||
+            String(item.acc_no || '').toLowerCase().includes(query) ||
             item.description?.toLowerCase().includes(query)
           );
         });
