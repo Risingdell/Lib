@@ -1,0 +1,223 @@
+/* Snackbar Overlay */
+.snackbar-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 20px;
+  pointer-events: none;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.snackbar-overlay-exit {
+  animation: fadeOut 0.3s ease-out;
+}
+
+/* Snackbar Container */
+.snackbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 320px;
+  max-width: 600px;
+  padding: 16px 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
+              0 2px 8px rgba(0, 0, 0, 0.08);
+  pointer-events: auto;
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-left: 4px solid;
+}
+
+.snackbar-exit {
+  animation: slideDown 0.3s ease-in;
+}
+
+/* Snackbar Types */
+.snackbar-success {
+  border-left-color: #10b981;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+}
+
+.snackbar-warning {
+  border-left-color: #f59e0b;
+  background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+}
+
+.snackbar-error {
+  border-left-color: #ef4444;
+  background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+}
+
+/* Snackbar Content */
+.snackbar-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.snackbar-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.snackbar-success .snackbar-icon {
+  color: #10b981;
+}
+
+.snackbar-warning .snackbar-icon {
+  color: #f59e0b;
+}
+
+.snackbar-error .snackbar-icon {
+  color: #ef4444;
+}
+
+.snackbar-message {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
+/* Close Button */
+.snackbar-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.snackbar-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #374151;
+}
+
+.snackbar-close:active {
+  transform: scale(0.95);
+}
+
+.snackbar-close svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Action Buttons (for confirmation variant) */
+.snackbar-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.snackbar-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.snackbar-btn-cancel {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.snackbar-btn-cancel:hover {
+  background: #e5e7eb;
+}
+
+.snackbar-btn-confirm {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.snackbar-btn-confirm:hover {
+  background: #2563eb;
+}
+
+.snackbar-btn:active {
+  transform: scale(0.98);
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .snackbar-overlay {
+    padding: 16px;
+  }
+
+  .snackbar {
+    min-width: unset;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .snackbar-message {
+    font-size: 14px;
+  }
+
+  .snackbar-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
