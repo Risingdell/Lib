@@ -3,11 +3,13 @@ import axios from 'axios';
 import './AdminDashboard.css';
 import BookLoader from '../Components/BookLoader';
 import { useSnackbar } from '../Context/SnackbarContext';
+import { useTheme } from '../Context/ThemeContext';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const AdminDashboard = () => {
   const { showSnackbar, showConfirmSnackbar } = useSnackbar();
+  const { theme, toggleTheme } = useTheme();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,6 +18,7 @@ const AdminDashboard = () => {
   const [pendingReturns, setPendingReturns] = useState([]);
   const [borrowingHistory, setBorrowingHistory] = useState([]);
   const [pendingUsers, setPendingUsers] = useState([]);
+  const [members, setMembers] = useState([]);
   const initialFormState = {
     acc_no: '',
     author: '',
@@ -59,7 +62,7 @@ const AdminDashboard = () => {
     fetchAdmin();
   }, []);
 
-  // Fetch borrowed, expired books, pending returns, history, or pending users based on tab
+  // Fetch borrowed, expired books, pending returns, history, pending users, or members based on tab
   useEffect(() => {
     const fetchBorrowedBooks = async () => {
       try {
@@ -79,13 +82,16 @@ const AdminDashboard = () => {
         } else if (activeTab === 'registration-requests') {
           res = await axios.get(`${API_URL}/api/admin/pending-users`, { withCredentials: true });
           if (res) setPendingUsers(res.data);
+        } else if (activeTab === 'members') {
+          res = await axios.get(`${API_URL}/api/admin/members`, { withCredentials: true });
+          if (res) setMembers(res.data);
         }
       } catch (err) {
         console.error('Failed to fetch data:', err.response?.data?.message || err.message);
       }
     };
 
-    if (activeTab === 'borrowed' || activeTab === 'expired' || activeTab === 'pending-returns' || activeTab === 'history' || activeTab === 'registration-requests') {
+    if (activeTab === 'borrowed' || activeTab === 'expired' || activeTab === 'pending-returns' || activeTab === 'history' || activeTab === 'registration-requests' || activeTab === 'members') {
       fetchBorrowedBooks();
     }
   }, [activeTab]);
@@ -258,6 +264,10 @@ const AdminDashboard = () => {
             <span className="nav-icon">👥</span>
             <span className="nav-text">Registration Requests</span>
           </button>
+          <button className={`nav-item${activeTab === 'members' ? ' active' : ''}`} onClick={() => handleTabChange('members')}>
+            <span className="nav-icon">👨‍👩‍👧‍👦</span>
+            <span className="nav-text">Members</span>
+          </button>
           <button className={`nav-item${activeTab === 'borrowed' ? ' active' : ''}`} onClick={() => handleTabChange('borrowed')}>
             <span className="nav-icon">📖</span>
             <span className="nav-text">Borrowed Books</span>
@@ -280,6 +290,10 @@ const AdminDashboard = () => {
           </button>
         </nav>
         <div className="sidebar-footer">
+          <button className="nav-item theme-toggle-btn" onClick={toggleTheme}>
+            <span className="nav-icon">{theme === 'light' ? '🌙' : '☀️'}</span>
+            <span className="nav-text">{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+          </button>
           <button className="nav-item logout-btn" onClick={handleLogout}>
             <span className="nav-icon">🚪</span>
             <span className="nav-text">Logout</span>
@@ -294,6 +308,7 @@ const AdminDashboard = () => {
           <h1 className="page-title">
             {activeTab === 'profile' && 'Admin Profile'}
             {activeTab === 'registration-requests' && 'Registration Requests'}
+            {activeTab === 'members' && 'Members'}
             {activeTab === 'borrowed' && 'Borrowed Books'}
             {activeTab === 'expired' && 'Expired Books'}
             {activeTab === 'pending-returns' && 'Pending Returns'}
@@ -396,6 +411,49 @@ const AdminDashboard = () => {
                           >
                             ❌ Reject
                           </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          )}
+          {activeTab === 'members' && (
+            <div className="dashboard-content">
+              <h2 className="section-title">All Members ({members.length})</h2>
+              {members.length === 0 ? (
+                <p>No members found.</p>
+              ) : (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>User ID</th>
+                      <th>Name</th>
+                      <th>Username</th>
+                      <th>USN</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Department</th>
+                      <th>Registered On</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {members.map((member) => (
+                      <tr key={member.id}>
+                        <td>{member.id}</td>
+                        <td>{member.firstName} {member.lastName}</td>
+                        <td>{member.username}</td>
+                        <td>{member.usn}</td>
+                        <td>{member.email}</td>
+                        <td>{member.phone || '-'}</td>
+                        <td>{member.department || '-'}</td>
+                        <td>{new Date(member.registered_at).toLocaleDateString()}</td>
+                        <td>
+                          <span className={`status-badge status-${member.approval_status}`}>
+                            {member.approval_status}
+                          </span>
                         </td>
                       </tr>
                     ))}

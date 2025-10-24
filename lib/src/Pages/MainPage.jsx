@@ -4,11 +4,16 @@ import './MainPage.css';
 import axios from 'axios';
 import BookLoader from '../Components/BookLoader';
 import { useSnackbar } from '../Context/SnackbarContext';
+import { useTheme } from '../Context/ThemeContext';
+
+
+
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const MainPage = () => {
   const { showSnackbar, showConfirmSnackbar } = useSnackbar();
+  const { theme, toggleTheme } = useTheme();
   const [sellStatusMessage, setSellStatusMessage] = useState('');
   const [availableBooks, setAvailableBooks] = useState([]);
   const [borrowedBooks, setBorrowedBooks] = useState([]);
@@ -760,6 +765,10 @@ const MainPage = () => {
           </button>
         </nav>
         <div className="sidebar-footer">
+          <button className="nav-item theme-toggle-btn" onClick={toggleTheme}>
+            <span className="nav-icon">{theme === 'light' ? '🌙' : '☀️'}</span>
+            <span className="nav-text">{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+          </button>
           <button
             className="nav-item logout-btn"
             onClick={() => {
