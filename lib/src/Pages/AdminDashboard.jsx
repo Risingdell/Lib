@@ -433,9 +433,8 @@ const AdminDashboard = () => {
                       <th>Username</th>
                       <th>USN</th>
                       <th>Email</th>
-                      <th>Phone</th>
-                      <th>Department</th>
                       <th>Registered On</th>
+                      <th>Approved On</th>
                       <th>Status</th>
                     </tr>
                   </thead>
@@ -447,9 +446,12 @@ const AdminDashboard = () => {
                         <td>{member.username}</td>
                         <td>{member.usn}</td>
                         <td>{member.email}</td>
-                        <td>{member.phone || '-'}</td>
-                        <td>{member.department || '-'}</td>
                         <td>{new Date(member.registered_at).toLocaleDateString()}</td>
+                        <td>
+                          {member.approved_at
+                            ? new Date(member.approved_at).toLocaleDateString()
+                            : '-'}
+                        </td>
                         <td>
                           <span className={`status-badge status-${member.approval_status}`}>
                             {member.approval_status}
