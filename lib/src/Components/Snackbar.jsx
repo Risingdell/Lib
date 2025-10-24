@@ -13,11 +13,17 @@ const Snackbar = ({
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
       setIsExiting(false);
+
+      // Small delay to trigger animation
+      requestAnimationFrame(() => {
+        setIsAnimating(true);
+      });
 
       // Auto-hide only for alert variant
       if (variant === 'alert') {
@@ -31,6 +37,7 @@ const Snackbar = ({
   }, [isOpen, variant, duration]);
 
   const handleClose = () => {
+    setIsAnimating(false);
     setIsExiting(true);
     setTimeout(() => {
       setIsVisible(false);
@@ -77,8 +84,8 @@ const Snackbar = ({
   };
 
   return (
-    <div className={`snackbar-overlay ${isExiting ? 'snackbar-overlay-exit' : ''}`}>
-      <div className={`snackbar snackbar-${type} ${isExiting ? 'snackbar-exit' : ''}`}>
+    <div className={`snackbar-overlay ${isAnimating ? 'snackbar-overlay-active' : ''} ${isExiting ? 'snackbar-overlay-exit' : ''}`}>
+      <div className={`snackbar snackbar-${type} ${isAnimating ? 'snackbar-active' : ''} ${isExiting ? 'snackbar-exit' : ''}`}>
         <div className="snackbar-content">
           {getIcon()}
           <span className="snackbar-message">{message}</span>
