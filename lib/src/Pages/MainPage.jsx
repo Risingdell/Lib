@@ -865,7 +865,9 @@ const MainPage = () => {
             className={'nav-item ' + (activeTab === 'borrowed' ? 'active' : '')}
             onClick={() => handleTabChange('borrowed')}
           >
-            <span className="nav-icon">📖</span>
+            <span className="nav-icon">
+              <img src="/ph--books-thin.svg" alt="My Books" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">
               My Books
               {borrowedBooks.filter(b => b.return_status === 'active' || !b.return_status).length > 0 && (
@@ -879,21 +881,27 @@ const MainPage = () => {
             className={'nav-item ' + (activeTab === 'history' ? 'active' : '')}
             onClick={() => handleTabChange('history')}
           >
-            <span className="nav-icon">📋</span>
+            <span className="nav-icon">
+              <img src="/clarity--history-line.svg" alt="History" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">History</span>
           </button>
           <button
             className={'nav-item ' + (activeTab === 'sell' ? 'active' : '')}
             onClick={() => handleTabChange('sell')}
           >
-            <span className="nav-icon">💼</span>
+            <span className="nav-icon">
+              <img src="/sellbooks.svg" alt="Sell Book" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Sell Book</span>
           </button>
           <button
             className={'nav-item ' + (activeTab === 'view-sell' ? 'active' : '')}
             onClick={() => handleTabChange('view-sell')}
           >
-            <span className="nav-icon">🛒</span>
+            <span className="nav-icon">
+              <img src="/roentgen--marketplace.svg" alt="Marketplace" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Marketplace</span>
           </button>
           <button

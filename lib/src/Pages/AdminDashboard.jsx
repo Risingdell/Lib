@@ -272,7 +272,9 @@ const AdminDashboard = () => {
             <span className="nav-text">Members</span>
           </button>
           <button className={`nav-item${activeTab === 'borrowed' ? ' active' : ''}`} onClick={() => handleTabChange('borrowed')}>
-            <span className="nav-icon">📖</span>
+            <span className="nav-icon">
+              <img src="/ph--books-thin.svg" alt="Borrowed Books" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Borrowed Books</span>
           </button>
           <button className={`nav-item${activeTab === 'expired' ? ' active' : ''}`} onClick={() => handleTabChange('expired')}>
@@ -284,7 +286,9 @@ const AdminDashboard = () => {
             <span className="nav-text">Pending Returns</span>
           </button>
           <button className={`nav-item${activeTab === 'history' ? ' active' : ''}`} onClick={() => handleTabChange('history')}>
-            <span className="nav-icon">📚</span>
+            <span className="nav-icon">
+              <img src="/clarity--history-line.svg" alt="Borrowing History" style={{ width: '20px', height: '20px' }} />
+            </span>
             <span className="nav-text">Borrowing History</span>
           </button>
           <button className={`nav-item${activeTab === 'add' ? ' active' : ''}`} onClick={() => handleTabChange('add')}>
