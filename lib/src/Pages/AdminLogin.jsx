@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './AdminLogin.css';
+import sitLogo from '../assets/sit2.jpg';
+import deepRightImg from '../assets/branch.png';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -28,6 +30,10 @@ const AdminLogin = () => {
 
   return (
     <div className="admin-login-container">
+      <div className="top-bar">
+              <img src={sitLogo} alt="Logo Left" className="bar-image" />
+              <img src={deepRightImg} alt="Logo Right" className="bar-right-img" />
+            </div>
       <div className="admin-login-card">
         <h2 className="admin-login-title">Admin Login</h2>
         <p className="admin-login-subtitle">Access administrator dashboard</p>

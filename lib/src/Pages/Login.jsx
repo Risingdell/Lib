@@ -5,6 +5,8 @@ import { UserContext } from "../Context/UserContext";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
 import { useSnackbar } from "../Context/SnackbarContext";
+import sitLogo from '../assets/sit2.jpg';
+import deepRightImg from '../assets/branch.png';
 
 function Login() {
   const { setUser } = useContext(UserContext);
@@ -46,6 +48,10 @@ function Login() {
 
   return (
     <div className="login-container">
+      <div className="top-bar">
+              <img src={sitLogo} alt="Logo Left" className="bar-image" />
+              <img src={deepRightImg} alt="Logo Right" className="bar-right-img" />
+            </div>
       <div className="login-card">
         <h2 className="login-title">Welcome Back</h2>
         <p className="login-subtitle">Sign in to access your library</p>

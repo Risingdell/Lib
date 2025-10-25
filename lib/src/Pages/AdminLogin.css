@@ -1,5 +1,60 @@
 /* AdminLogin.css - Compact Black, Blue & White Theme (Matching Register & Login) */
 
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+  z-index: 1000;
+}
+
+.bar-image {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+.bar-right-img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+  margin-right: 20px; /* adds gap from the right edge */
+}
+
+/* ✅ Responsive adjustments for smaller screens */
+@media (max-width: 800px) {
+  .bar-right-img {
+    height: 35px;
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 500px) {
+  .top-bar {
+    padding: 0 10px;
+  }
+
+  .bar-image {
+    height: 40px;
+  }
+
+  .bar-right-img {
+    height: 32px;
+    margin-right: 8px;
+  }
+}
+
+
+
+
 .admin-login-container {
   width: 100%;
   height: 100vh;
