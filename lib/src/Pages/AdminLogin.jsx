@@ -30,10 +30,7 @@ const AdminLogin = () => {
 
   return (
     <div className="admin-login-container">
-      <div className="top-bar">
-              <img src={sitLogo} alt="Logo Left" className="bar-image" />
-              <img src={deepRightImg} alt="Logo Right" className="bar-right-img" />
-            </div>
+
       <div className="admin-login-card">
         <h2 className="admin-login-title">Admin Login</h2>
         <p className="admin-login-subtitle">Access administrator dashboard</p>

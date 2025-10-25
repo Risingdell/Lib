@@ -48,10 +48,7 @@ function Login() {
 
   return (
     <div className="login-container">
-      <div className="top-bar">
-              <img src={sitLogo} alt="Logo Left" className="bar-image" />
-              <img src={deepRightImg} alt="Logo Right" className="bar-right-img" />
-            </div>
+
       <div className="login-card">
         <h2 className="login-title">Welcome Back</h2>
         <p className="login-subtitle">Sign in to access your library</p>
